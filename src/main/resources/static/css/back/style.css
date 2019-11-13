@@ -1,0 +1,130 @@
+
+
+/* adminNavigator.html */
+.topper{
+    width: 100%;
+    height: 40px;
+}
+
+.topper .top-welcome{
+    margin-left: 10%;
+    display: inline-block;
+    width: 10%;
+    height: 40px;
+    line-height: 40px;
+    float:left;
+}
+
+.topper .choices-list{
+    margin-left: 60%;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    width: 30%;
+    height: 40px;
+    line-height: 40px;
+}
+
+.topper .choices-list li:nth-child(1):before{
+    display: inline-block;
+    content: "";
+    width: 10px;
+    height: 10px;
+    background-color: rgba(255,0,0,0.6);
+    border-radius: 50%;
+}
+
+.topper .choices-list li:nth-child(2):before{
+    display: inline-block;
+    content: "";
+    width: 10px;
+    height: 10px;
+    background-color: rgba(255,231,18,0.8);
+    border-radius: 50%;
+}
+
+.topper .choices-list li:nth-child(3):before{
+    display: inline-block;
+    content: "";
+    width: 10px;
+    height: 10px;
+    background-color: rgba(0,255,100,0.6);
+    border-radius: 50%;
+}
+
+.listDataTableDiv{
+    margin: auto;
+    width: 90%;
+    min-height:220px;
+}
+
+.listDataTableDiv table{
+    font-weight: bold;
+    opacity: 0.8;
+}
+.addTable,.editTable{
+    margin: 0 auto;
+    width: 80%;
+}
+
+.addDiv{
+    margin:-20px auto 10px;
+    width:400px;
+    padding:10px;
+    text-align:center;
+    background-color:rgba(255,255,255,0.8);
+    border-radius:8px;
+}
+.editDiv{
+    margin:20px auto;
+    width:400px;
+    padding:10px;
+    text-align:center;
+    background-color:rgba(255,255,255,0.8);
+    border-radius:8px;
+}
+.addDiv .panel-heading,.editDiv .panel-heading{
+    margin-bottom:3px;
+    font-size:16px;
+    font-weight:bold;
+}
+
+.addDiv input,.editDiv input,.editDiv textarea{
+    margin: 10px auto;
+    border-radius:8px;
+}
+
+.addDiv a,.editDiv a{
+    display:block;
+    margin:15px auto;
+    width:20%;
+}
+
+.pageDiv{
+    width:100%;
+    text-align:center;
+}
+
+/* editPropertyValue.html */
+.editPVDiv{
+    width:500px;
+    margin:80px auto;
+    font-size:16px;
+}
+.editTable{
+    text-align:center;
+}
+.editTable td{
+    font-weight:bold;
+}
+.editPVDiv input{
+    outline: none;
+    border:1px solid #ccc;
+    border-radius: 8px;
+    text-indent: 0.5em;
+}
+
+table img{
+    width: 20px;
+    height: 20px;
+}

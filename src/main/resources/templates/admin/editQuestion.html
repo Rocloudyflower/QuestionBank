@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="include/admin_/adminHeader::html" ></head>
+<body>
+<div th:replace="include/admin_/adminNavigator::html" ></div>
+<script>
+    $(function(){
+        let data4Vue = {
+            uri: 'questions',
+            listURL:'admin_question_list',
+            bean: { id: 0, detailquestion: '', answer: '',explanation:''}
+        }
+
+        //ViewModel
+        let vue = new Vue({
+            el: '#workingArea',
+            data: data4Vue,
+            mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+                this.get()
+            },
+            methods: {
+                get:function(){
+                    let id = getUrlParms("id")
+                    let url = this.uri + "/" + id
+                    axios.get(url).then(function(response) {
+                        vue.bean = response.data
+                    })
+                },
+                update:function () {
+                    if(!checkEmpty(this.bean.detailquestion, "题目"))
+                        return
+                    if(!checkEmpty(this.bean.answer, "答案"))
+                        return
+                    let url = this.uri + "/" + this.bean.id
+
+                    //axios.js 上传文件要用 formData 这种方式
+                    let formData = new FormData()
+                    formData.append("detailquestion", this.bean.detailquestion)
+                    formData.append("answer", this.bean.answer)
+                    formData.append("explanation", this.bean.explanation)
+                    axios.post(url,formData).then(function(response){
+                        location.href = vue.listURL
+                    })
+                }
+            }
+        })
+    })
+</script>
+
+<div id="workingArea">
+    <div class="panel panel-warning editDiv">
+        <div class="panel-heading">编辑题型</div>
+        <div class="panel-body">
+            <table class="editTable">
+                <tr>
+                    <td>题型</td>
+                    <td><textarea @keyup.enter="update" v-model.trim="bean.detailquestion" type="text" class="form-control"></textarea></td>
+                </tr>
+                <tr>
+                    <td>答案</td>
+                    <td><textarea @keyup.enter="update" v-model.trim="bean.answer" type="text" class="form-control"></textarea></td>
+                </tr>
+                <tr>
+                    <td>解析</td>
+                    <td><textarea @keyup.enter="update" v-model.trim="bean.explanation" type="text" class="form-control"></textarea></td>
+                </tr>
+            </table>
+            <input type="hidden" name="id"  v-model.trim="bean.id" >
+            <a href="#" class="btn btn-success" @click="update">提 交</a>
+        </div>
+    </div>
+</div>
+
+<!--<div th:replace="include/admin_/adminFooter::html" ></div>-->
+</body>
+</html>

@@ -1,0 +1,91 @@
+<div th:fragment="html" xmlns:th="http://www.w3.org/1999/xhtml">
+    <script>
+        $(function () {
+            let data4Vue = {
+                uri:'excercises',
+                units:[],
+                questions:[]
+            }
+            let vue = new Vue({
+                el:"#workingArea",
+                data:data4Vue,
+                mounted:function () {
+                    this.list()
+                },
+                methods:{
+                    list:function () {
+                        let url = 'units' // 这个是分页返回的..需要重新写方法
+                        axios.get(url).then(function (response) {
+                            vue.units = response.data.content
+                        })
+                    },
+                    getquestions:function(question){
+                        let qid = question.id
+                        let url = "questions/" + qid + "/propertyValues"
+                        let beans = {}
+                        axios.get(url).then(function (response) {
+                            beans = response.data
+                            // console.log(beans)
+                            for (let i = 0; i < beans.length; i++) {
+                                // var input =""
+                                //
+                                var input = "<input type='radio' name='answers" + qid +"' value='" + beans[i].property.name + "'> <label>" + beans[i].property.name + "</label>"
+                                var span = "<span> | " + beans[i].value + " </span>"
+                                $("#answerItems" + qid).append(input)
+                                $("#answerItems" + qid).append(span)
+                                $("#answerItems" + qid).append("<br/>")
+                            }
+                        })
+                    },
+                    chooseUnit:function (unit) {
+                        let uid = unit.id
+                        let url = this.uri + "/" + uid + "/" + "questionsinfo"
+                        axios.get(url).then(function (response) {
+                            vue.questions = response.data
+                            for(let q in vue.questions){
+                                vue.getquestions(vue.questions[q])
+                            }
+                        })
+                    },
+                    submitAnswer:function (question) {
+                        let judge = false
+                        let qid = question.id
+                        let div = '<div style="background-color: #dca7a7;color: #a94442;height: 30px;width: 100px;text-align: center;line-height: 30px;">回答错误</div>'
+                        let p1 = '<p>' + question.answer + '</p>'
+                        let p2 = '<p>' + question.explanation + '</p>'
+                        $("#answerBtn" + qid).css("display","none")
+                        //    判断选了哪个选项
+                        if($("input[name='answers"+ qid + "']:checked").val() === question.answer){
+                            judge = true
+                        }
+                        if(judge){
+                            div = '<div style="background-color: #d0e9c6;color: #3e8f3e;height: 30px;width: 100px;text-align: center;line-height: 30px;">回答正确</div>'
+                        }
+                        else{
+                            // 加入错题本
+                        }
+
+                        $("#answersDiv" + qid).append(p1).append(p2).append(div).show()
+
+                    }
+                }
+            })
+        })
+    </script>
+
+    <div class="unit-choices">
+        <h3>请选择单元</h3>
+        <ul class="units-list">
+            <li v-for="u in units" @click="chooseUnit(u)">{{u.name}}</li>
+        </ul>
+    </div>
+
+    <div class="exercisePage">
+        <div class="exerciseDiv">
+            <div th:replace="include/fore_/excerciseArea::html"></div>
+        </div>
+    </div>
+
+
+
+</div>

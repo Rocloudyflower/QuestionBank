@@ -1,0 +1,113 @@
+<div th:fragment="html" xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <script>
+        $(function () {
+            let keyword = getUrlParms("keyword")
+            let data4Vue = {
+                uri:"foresearch",
+                questions:[],
+                file:null,
+                pagination:{},
+                user:{email:'',password:''}
+            }
+
+            // VueModel
+            let vue = new Vue({
+                el:"#workingArea",
+                data:data4Vue,
+                mounted:function(){
+
+                },
+                methods:{
+                    textSearch:function(){
+                        keyword = $(" input[ name='keyword' ] ").val()
+                        let url =  this.uri+"?keyword=" + keyword
+                        axios.post(url).then(function(response) {
+                            vue.pagination = response.data
+                            vue.questions = response.data.content
+                        })
+
+                        for(var i = 0; i < vue.questions.length ; i++ ){
+                            console.log(vue.questions[i].id)
+                            var temp_id = vue.questions[i].id
+                            $("#questionItemsTR" + temp_id).addClass('firsttime')
+                            $("#questionItemsTRchoice" + temp_id).empty()
+                            $("#questionItemsTR" + temp_id).hide()
+                        }
+                    },
+                    photoSearch:function(){
+
+                    },
+                    jump: function(page){
+                        jump(page,vue)
+                    },
+                    jumpByNumber: function(start){
+                        jumpByNumber(start,vue)
+                    },
+                    showQuestionItem:function (question) {
+                        let qid = question.id
+                        if($("#questionItemsTR" + qid).hasClass('firsttime')){
+                            let url = "questions/"+ qid +"/propertyValues"
+                            let beans = {}
+                            axios.get(url).then(function(response) {
+                                beans = response.data
+                                console.log(beans)
+                                for (let i = 0; i < beans.length ; i++){
+                                    var p = "<p>" + beans[i].property.name + " | " + beans[i].value + "</p>"
+                                    $("#questionItemsTRchoice" + qid).append(p)
+                                }
+                            })
+                        }
+                        $("#questionItemsTR" + qid).removeClass('firsttime').toggle()
+                    },
+                    addCollection:function (question) {
+                        let url = "forecheckLogin"
+                        axios.get(url).then(function(response) {
+                            if(0 === response.data.code){
+                                let qid = question.id
+                                let url_ =  "collections?qid=" + qid
+                                axios.post(url_).then(function(response) {
+                                    let result = response.data
+                                    if(0 === result.code){
+                                        alert("添加成功")
+                                    }
+                                    else {
+                                        alert("添加失败，请稍后重试")
+                                    }
+                                })
+                            }
+                            else{
+                                $("#loginModal").modal('show')
+                            }
+                        })
+                    }
+                }
+            })
+        })
+    </script>
+
+    <div th:replace="include/fore_/modal4login::html"></div>
+
+    <div class="searchArea">
+        <img th:src="@{/img/logo.png}" alt="" src="../../../static/img/logo.png">
+            <input type="text" class="searchInput" name="keyword">
+            <ul class="btn-list">
+                <li>
+                    <button class="search-btn" @click="textSearch">搜索🔍</button>
+                </li>
+                <li>
+                    <button class="search-photo" @click="photoSearch">📷</button>
+                </li>
+            </ul>
+
+
+<!--        放入上传的图片-->
+<!--        <div></div>-->
+        <div id="searchResult">
+            <div class="searchResultDiv">
+                <div th:replace="include/fore_/questionsBySearch::html"></div>
+            </div>
+        </div>
+    </div>
+
+</div>

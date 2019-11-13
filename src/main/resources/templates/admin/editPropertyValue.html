@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="include/admin_/adminHeader::html" ></head>
+<body>
+<div th:replace="include/admin_/adminNavigator::html" ></div>
+<script>
+    $(function(){
+        let qid = getUrlParms("qid")
+        let data4Vue = {
+            uri:'propertyValues',
+            beans: [],
+            question: '',
+            category:''
+        }
+
+        //ViewModel
+        let vue = new Vue({
+            el: '#workingArea',
+            data: data4Vue,
+            mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+                this.getQuestion(qid)
+                this.list()
+            },
+            methods: {
+                list:function(){
+                    let url = "questions/"+qid+"/"+ this.uri
+                    axios.get(url).then(function(response) {
+                        vue.beans = response.data
+                    })
+                },
+                getQuestion:function(qid){
+                    let url = "questions/"+qid
+                    axios.get(url).then(function(response) {
+                        vue.product = response.data
+                        vue.category = vue.product.category
+                    })
+                },
+                update:function(bean){
+                    let url =  this.uri
+                    let id = bean.id
+                    $("#pvid"+bean.id).css("border","1px solid yellow")
+                    axios.put(url,bean).then(function(response) {
+                        if(bean.id === response.data.id)
+                            $("#pvid"+bean.id).css("border","1px solid green")
+                        else
+                            $("#pvid"+bean.id).css("border","1px solid red")
+                    })
+                }
+            }
+
+        })
+    })
+
+</script>
+
+<div id="workingArea">
+    <div class="panel panel-warning editPVDiv editDiv">
+        <div class="panel-heading">编辑属性</div>
+        <div class="panel-body">
+            <table class="editTable">
+                <tr v-for="bean in beans" class="eachPV">
+                    <td>{{bean.property.name}}</td>
+                    <td><input class="pvValue" :id="'pvid'+bean.id" type="text" v-model="bean.value" @keyup="update(bean)"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!--<div th:replace="include/admin_/adminFooter::html" ></div>-->
+</body>
+</html>

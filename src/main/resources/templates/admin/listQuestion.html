@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="include/admin_/adminHeader::html" ></head>
+<body>
+<div th:replace="include/admin_/adminNavigator::html" ></div>
+<script>
+    $(function(){
+        let uid = getUrlParms("uid");
+        let data4Vue = {
+            uri:'questions',
+            beans: [],
+            bean: {id: 0 ,detailquestion:'',answer:'',explanation: '',property:[], category : {'id':0} , unit : {'id':0} , score : 0.00},
+            pagination:{},
+            unit:'',
+            categories:[]
+        }
+
+        //ViewModel
+        let vue = new Vue({
+            el: '#workingArea',
+            data: data4Vue,
+            mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+                this.list(0)
+                this.getCategory()
+                this.getUnit(uid)
+            },
+            methods: {
+                getCategory:function(){
+                    let url = "categories/getall"
+                    axios.get(url).then(function(response) {
+                        vue.categories = response.data
+                    })
+                },
+                getUnit:function(uid){
+                    let url = "units/"+uid
+                    axios.get(url).then(function(response) {
+                        vue.unit = response.data
+                    })
+                },
+                list:function(start){
+                    let url =  "units/"+uid+"/"+this.uri+"?start="+start
+                    axios.get(url).then(function(response) {
+                        vue.pagination = response.data
+                        vue.beans = response.data.content
+                    })
+                },
+                add: function () {
+                    if(!checkEmpty(this.bean.detailquestion, "题目"))
+                        return
+                    if (!checkEmpty(this.bean.answer, "答案"))
+                        return
+                    if (!checkEmpty(this.bean.category, "题型"))
+                        return
+
+                    console.log(this.bean)
+
+                    let url = this.uri
+                    this.bean.unit.id=uid
+                    axios.post(url,this.bean).then(function(response){
+                        vue.list(0)
+                        vue.bean =  {id: 0 ,detailquestion:'',answer:'',explanation:'', category : {'id':0} , unit : {'id':0} , score : 0.00};
+                    })
+                },
+                deleteBean: function (id) {
+                    if(!checkDeleteLink())
+                        return;
+                    let url = this.uri+"/"+id;
+                    axios.delete(url).then(function(response){
+                        if(0 !== response.data.length)
+                            alert(response.data);
+                        else
+                            vue.list(0);
+                    });
+                },
+                jump: function(page){
+                    jump(page,vue); //定义在adminHeader.html 中
+                },
+                jumpByNumber: function(start){
+                    jumpByNumber(start,vue);
+                }
+            }
+
+        });
+    });
+
+</script>
+
+<div id="workingArea" >
+    <div class="listDataTableDiv">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <!--                <th>图片</th>-->
+                                <th>题目</th>
+                                <th>答案</th>
+                                <th>解析</th>
+                                <th>题型</th>
+                                <th>设置属性</th>
+                                <th>编辑</th>
+                                <th>删除</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="bean in beans ">
+                                <td>{{bean.id}}</td>
+                                <td>{{bean.detailquestion| subStringFilter(0,20)}}</td>
+                                <td>{{bean.answer| subStringFilter(0,10)}}</td>
+                                <td>{{bean.explanation| subStringFilter(0,10)}}</td>
+                                <td>{{bean.category.name}}</td>
+                                <td>
+                                    <a :href="'admin_propertyValue_edit?qid=' + bean.id ">
+                                        <img th:src="@{/img/menu.png}" alt="">
+<!--                                        <button>设置属性</button>-->
+                                    </a>
+                                </td>
+                                <td>
+                                    <a :href="'admin_question_edit?id=' + bean.id ">
+                                        <img th:src="@{/img/edit.png}" alt="">
+<!--                                        <button>编辑</button>-->
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="#"  @click="deleteBean(bean.id)">
+                                        <img th:src="@{/img/delete.png}" alt="">
+<!--                                        <button>删除</button>-->
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div th:replace="include/admin_/adminPage::html" ></div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <div class="panel panel-warning addDiv">
+        <div class="panel-heading">新增题目</div>
+        <div class="panel-body">
+            <table class="addTable">
+                <tr>
+                    <td>题目</td>
+                    <td><textarea @keyup.enter="add" v-model.trim="bean.detailquestion" type="text" class="form-control"></textarea></td>
+                </tr>
+                <tr>
+                    <td>答案</td>
+                    <td><textarea  @keyup.enter="add" v-model.trim="bean.answer" type="text" class="form-control"></textarea></td>
+                </tr>
+                <tr>
+                    <td>解析</td>
+                    <td><textarea  @keyup.enter="add" v-model.trim="bean.explanation" type="text" class="form-control"></textarea></td>
+                </tr>
+                <tr>
+                    <td>题型</td>
+                    <td>
+                        <select name="categories-list" id="cid" v-model.trim="bean.category.id" class="form-control">
+                            <option v-for="category in categories" th:selected="selected" :value="category.id">{{category.name}}</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <a href="#" @click="add" class="btn btn-success">提交</a>
+        </div>
+    </div>
+</div>
+
+<!--<div th:replace="include/admin_/adminFooter::html" ></div>-->
+</body>
+</html>
