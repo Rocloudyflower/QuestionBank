@@ -439,3 +439,16 @@
     background-color: rgb(235,211,180);
     color: #fff;
 }
+
+/*  searchPic */
+.search-photo{
+    position:relative;
+}
+#searchPic{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    opacity:0;
+}

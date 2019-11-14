@@ -8,7 +8,8 @@
                 questions:[],
                 file:null,
                 pagination:{},
-                user:{email:'',password:''}
+                user:{email: '',password: ''},
+                searchFile: ''
             }
 
             // VueModel
@@ -35,8 +36,22 @@
                             $("#questionItemsTR" + temp_id).hide()
                         }
                     },
-                    photoSearch:function(){
+                    photoSearch:function(event){
+                        //    上传图片文件
+                        //    formdata格式
+                        this.searchFile = event.target.files[0]
+                        // if(!checkEmpty(this.searchFile, "搜题图片"))
+                        //     return
 
+                        let url = this.uri + "/picture"
+
+                        let formData = new FormData()
+                        formData.append("image", this.searchFile)
+
+                        axios.post(url,formData).then(function(response){
+                            $("#searchPic").val('')
+                            vue.searchFile = ''
+                        })
                     },
                     jump: function(page){
                         jump(page,vue)
@@ -96,7 +111,11 @@
                     <button class="search-btn" @click="textSearch">搜索🔍</button>
                 </li>
                 <li>
-                    <button class="search-photo" @click="photoSearch">📷</button>
+
+                    <button class="search-photo" >
+                        📷
+                        <input id="searchPic" type="file" @change="photoSearch($event)" name="image"/>
+                    </button>
                 </li>
             </ul>
 
