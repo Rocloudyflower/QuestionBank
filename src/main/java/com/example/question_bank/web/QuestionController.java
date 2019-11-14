@@ -1,10 +1,12 @@
 package com.example.question_bank.web;
 
 import com.example.question_bank.pojo.Question;
+import com.example.question_bank.service.PropertyValueService;
 import com.example.question_bank.service.QuestionService;
 import com.example.question_bank.util.Page4Navigator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +15,8 @@ import java.util.List;
 public class QuestionController {
     @Autowired
     QuestionService questionService;
+    @Autowired
+    PropertyValueService propertyValueService;
 
     @PostMapping("/questions")
     public Object add(@RequestBody Question bean) throws Exception {
@@ -20,8 +24,11 @@ public class QuestionController {
         return bean;
     }
 
+    @Transactional
     @DeleteMapping("/questions/{id}")
     public String delete(@PathVariable("id") int id)  throws Exception {
+        Question question = questionService.get(id);
+        propertyValueService.delete(question);
         questionService.delete(id);
         return null;
     }

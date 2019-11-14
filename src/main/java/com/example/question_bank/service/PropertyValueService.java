@@ -38,4 +38,10 @@ public class PropertyValueService {
     public List<PropertyValue> list(Question question) {
         return propertyValueDAO.findByQuestionOrderByIdAsc(question);
     }
+
+    public void delete(Question question){
+        propertyValueDAO.deleteByQuestion(question);
+    }
+
+
 }

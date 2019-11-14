@@ -5,7 +5,7 @@
 <div th:replace="include/admin_/adminNavigator::html" ></div>
 <script>
     $(function(){
-        let uid = getUrlParms("uid");
+        let uid = getUrlParms("uid")
         let data4Vue = {
             uri:'questions',
             beans: [],
@@ -58,30 +58,30 @@
                     this.bean.unit.id=uid
                     axios.post(url,this.bean).then(function(response){
                         vue.list(0)
-                        vue.bean =  {id: 0 ,detailquestion:'',answer:'',explanation:'', category : {'id':0} , unit : {'id':0} , score : 0.00};
+                        vue.bean =  {id: 0 ,detailquestion:'',answer:'',explanation:'', category : {'id':0} , unit : {'id':0} , score : 0.00}
                     })
                 },
                 deleteBean: function (id) {
                     if(!checkDeleteLink())
-                        return;
-                    let url = this.uri+"/"+id;
+                        return
+                    let url = this.uri + "/" + id
                     axios.delete(url).then(function(response){
                         if(0 !== response.data.length)
-                            alert(response.data);
+                            alert(response.data)
                         else
-                            vue.list(0);
-                    });
+                            vue.list(0)
+                    })
                 },
                 jump: function(page){
-                    jump(page,vue); //定义在adminHeader.html 中
+                    jump(page,vue) //定义在adminHeader.html 中
                 },
                 jumpByNumber: function(start){
-                    jumpByNumber(start,vue);
+                    jumpByNumber(start,vue)
                 }
             }
 
-        });
-    });
+        })
+    })
 
 </script>
 
