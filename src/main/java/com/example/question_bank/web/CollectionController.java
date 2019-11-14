@@ -10,9 +10,7 @@ import com.example.question_bank.util.Page4Navigator;
 import com.example.question_bank.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import sun.rmi.runtime.Log;
 
-import javax.management.Query;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
