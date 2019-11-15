@@ -43,12 +43,13 @@
                         // if(!checkEmpty(this.searchFile, "搜题图片"))
                         //     return
 
-                        let url = this.uri + "/picture"
+                        let url = "search/picture"
 
                         let formData = new FormData()
                         formData.append("image", this.searchFile)
 
                         axios.post(url,formData).then(function(response){
+                            console.log(response.data)
                             $("#searchPic").val('')
                             vue.searchFile = ''
                         })
