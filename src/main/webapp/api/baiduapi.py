@@ -16,11 +16,11 @@ def get_words(image_path):
     for item in ret['words_result']:
         print(item['words'])
 
-# def transGbk2Unicode(str_v):
-#     str_s = str_v.replace(r'\x', r'%')
-#     res = eval(repr(str_s).replace('\\', '\\\\'))
-#     return res.decode('gb2312')
+def transGbk2Unicode(str_v):
+    str_s = str_v.replace(r'\x', r'%')
+    res = eval(repr(str_s).replace('\\', '\\\\'))
+    return res.decode('gb2312')
 
 if __name__=='__main__':
-    # img_path = transGbk2Unicode(sys.argv[1])
-    get_words(r"D:\\QuestionBank\\src\\main\\webapp\\img\\image.jpg")
+    img_path = transGbk2Unicode(sys.argv[1])
+    get_words(img_path)
