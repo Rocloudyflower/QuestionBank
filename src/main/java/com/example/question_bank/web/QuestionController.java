@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 public class QuestionController {
@@ -91,14 +93,14 @@ public class QuestionController {
 
         String[] arguments = new String[] {"python", apiPath , imagePath};
 
-        String content = "";
+        StringBuilder content = new StringBuilder();
 
         try {
             Process process = Runtime.getRuntime().exec(arguments);
-            BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream(),"GBK"));
+            BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line = null;
             while ((line = in.readLine()) != null) {
-                content += line + '\n';
+                content.append(line);
                 System.out.println(line);
             }
             in.close();
@@ -107,8 +109,12 @@ public class QuestionController {
             int re = process.waitFor();
             System.out.println(re);
             System.out.println(content);
-
-            return questionService.search(content,0,20);
+            content = new StringBuilder(content.toString().replaceAll(" ", ""));
+            String regEx="[`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？-]";
+            Pattern p = Pattern.compile(regEx);
+            Matcher matcher = p.matcher(content.toString());
+            System.out.println(matcher.replaceAll("").trim());
+            return matcher.replaceAll("").trim();
 
 
 

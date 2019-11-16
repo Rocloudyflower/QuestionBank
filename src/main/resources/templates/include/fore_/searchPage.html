@@ -26,16 +26,23 @@
                         axios.post(url).then(function(response) {
                             // vue.pagination = response.data
                             vue.questions = response.data
-                            console.log(vue.questions)
+                            if(0 === vue.questions.length){
+                                let search_string = keyword
+                                window.open("https://www.baidu.com/s?wd=" + search_string)
+                            }
+                            else{
+                                console.log(vue.questions)
+                                for(let i = 0; i < vue.questions.length ; i++ ){
+                                    console.log(vue.questions[i].id)
+                                    var temp_id = vue.questions[i].id
+                                    $("#questionItemsTR" + temp_id).addClass('firsttime')
+                                    $("#questionItemsTRchoice" + temp_id).empty()
+                                    $("#questionItemsTR" + temp_id).hide()
+                                }
+                            }
                         })
 
-                        for(var i = 0; i < vue.questions.length ; i++ ){
-                            console.log(vue.questions[i].id)
-                            var temp_id = vue.questions[i].id
-                            $("#questionItemsTR" + temp_id).addClass('firsttime')
-                            $("#questionItemsTRchoice" + temp_id).empty()
-                            $("#questionItemsTR" + temp_id).hide()
-                        }
+
                     },
                     photoSearch:function(event){
                         //    上传图片文件
@@ -50,9 +57,45 @@
                         formData.append("image", this.searchFile)
 
                         axios.post(url,formData).then(function(response){
-                            console.log(response.data)
-                            $("#searchPic").val('')
-                            vue.searchFile = ''
+                            let keyword_ = response.data
+                            // let url_ =  this.uri+"?keyword=" + keyword_
+                            let url_ =  "foresearch?keyword=" + keyword_
+                            axios.post(url_).then(function(response) {
+                                // vue.pagination = response.data
+                                vue.questions = response.data
+                                if(0 === vue.questions.length){
+                                    let search_string = keyword_
+                                    window.open("https://www.baidu.com/s?wd=" + search_string)
+                                }
+                                else{
+                                    console.log(vue.questions)
+                                    for(let i = 0; i < vue.questions.length ; i++ ){
+                                        console.log(vue.questions[i].id)
+                                        var temp_id = vue.questions[i].id
+                                        $("#questionItemsTR" + temp_id).addClass('firsttime')
+                                        $("#questionItemsTRchoice" + temp_id).empty()
+                                        $("#questionItemsTR" + temp_id).hide()
+                                    }
+                                }
+                            })
+                            // vue.questions = response.data
+                            // if(0 === vue.questions.length){
+                            //     let search_string = keyword
+                            //     window.open("https://www.baidu.com/s?wd=" + search_string)
+                            // }
+                            // else{
+                            //     console.log(vue.questions)
+                            //     for(let i = 0; i < vue.questions.length ; i++ ){
+                            //         console.log(vue.questions[i].id)
+                            //         var temp_id = vue.questions[i].id
+                            //         $("#questionItemsTR" + temp_id).addClass('firsttime')
+                            //         $("#questionItemsTRchoice" + temp_id).empty()
+                            //         $("#questionItemsTR" + temp_id).hide()
+                            //     }
+                            // }
+                            // console.log(response.data)
+                            // $("#searchPic").val('')
+                            // vue.searchFile = ''
                         })
                     },
                     jump: function(page){

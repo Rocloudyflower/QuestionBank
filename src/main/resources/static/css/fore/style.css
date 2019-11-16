@@ -11,6 +11,10 @@
     line-height: 40px;
     float:left;
 }
+.topper .top-welcome a, .topper .top-welcome a:hover{
+    text-decoration: none;
+    color: #000;
+}
 
 .topper .check-list{
     width: 10%;
@@ -348,10 +352,10 @@
     cursor:pointer;
     transition:.5s;
 }
-.questionBlock:hover{
-    display:inline-block;
-    transform:translateY(-12px);
-}
+/*.questionBlock:hover{*/
+/*    display:inline-block;*/
+/*    transform:translateY(-12px);*/
+/*}*/
 
 .DetailQuestion{
     font-size: 18px;
