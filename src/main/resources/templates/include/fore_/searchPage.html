@@ -24,8 +24,9 @@
                         keyword = $(" input[ name='keyword' ] ").val()
                         let url =  this.uri+"?keyword=" + keyword
                         axios.post(url).then(function(response) {
-                            vue.pagination = response.data
-                            vue.questions = response.data.content
+                            // vue.pagination = response.data
+                            vue.questions = response.data
+                            console.log(vue.questions)
                         })
 
                         for(var i = 0; i < vue.questions.length ; i++ ){

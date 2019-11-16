@@ -68,7 +68,7 @@ public class QuestionController {
 
 //    图片文字识别API + 找题
     @PostMapping("/search/picture")
-    public String searchByPic(MultipartFile image, HttpServletRequest request){
+    public Object searchByPic(MultipartFile image, HttpServletRequest request){
         String folder = "img/";
         File imageFolder= new File(request.getServletContext().getRealPath(folder));
         File file = new File(imageFolder,image.getName()+".jpg");
@@ -91,7 +91,7 @@ public class QuestionController {
 
         String[] arguments = new String[] {"python", apiPath , imagePath};
 
-        String content = null;
+        String content = "";
 
         try {
             Process process = Runtime.getRuntime().exec(arguments);
@@ -102,12 +102,15 @@ public class QuestionController {
                 System.out.println(line);
             }
             in.close();
-            return content;
-
             //java代码中的process.waitFor()返回值为0表示我们调用python脚本成功，
             //返回值为1表示调用python脚本失败，这和我们通常意义上见到的0与1定义正好相反
-//            int re = process.waitFor();
-//            System.out.println(re);
+            int re = process.waitFor();
+            System.out.println(re);
+            System.out.println(content);
+
+            return questionService.search(content,0,20);
+
+
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,6 +1,7 @@
 package com.example.question_bank.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 @Entity
 @Table(name = "question")
 @JsonIgnoreProperties({ "handler","hibernateLazyInitializer" })
+@Document(indexName = "questionbank",type = "question")
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

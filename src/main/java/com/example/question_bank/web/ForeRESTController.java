@@ -73,7 +73,7 @@ public class ForeRESTController {
     public Object search( String keyword){
         if(null == keyword)
             keyword = "";
-        return questionService.search(keyword,0,20,5);
+        return questionService.search(keyword,0,20);
     }
 
 

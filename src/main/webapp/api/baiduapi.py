@@ -1,11 +1,12 @@
 
 from aip import AipOcr
 import sys
+
 def get_file_content(filePath):
     with open(filePath, 'rb') as fp:
         return fp.read()
+
 def get_words(image_path):
-    """ 你的 APPID AK SK """
     APP_ID = '17712908'
     API_KEY = '3TvcTfSPey2VkwaGt3bOeW72'
     SECRET_KEY = 'TjhPUD6ffZK5PIGxTZZVHuFjBVbeHtqo'
