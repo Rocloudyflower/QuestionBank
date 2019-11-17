@@ -37,21 +37,22 @@
                     },
                     chooseUnit:function (unit) {
 
-                        for(temp_unit in vue.units){
-                            $("#unitID" + temp_unit.id).prop("disabled","false")
-                            console.log('#unitID' + temp_unit.id)
+                        if(!$("#unitID" + unit.id).hasClass("disabled")){
+                            let uid = unit.id
+                            let url = this.uri + "/" + uid + "/" + "questionsinfo"
+                            axios.get(url).then(function (response) {
+                                vue.questions = response.data
+                                for(let q in vue.questions){
+                                    vue.getquestions(vue.questions[q])
+                                }
+                            })
+
                         }
-                        $("#unitID" + unit.id).prop("disabled","true")
 
-                        let uid = unit.id
-                        let url = this.uri + "/" + uid + "/" + "questionsinfo"
-                        axios.get(url).then(function (response) {
-                            vue.questions = response.data
-                            for(let q in vue.questions){
-                                vue.getquestions(vue.questions[q])
-                            }
-                        })
-
+                        for(let temp_unit in vue.units){
+                            $("#unitID" + vue.units[temp_unit].id).removeClass("disabled")
+                        }
+                        $("#unitID" + unit.id).addClass("disabled")
 
                     },
                     submitAnswer:function (question) {
@@ -89,7 +90,7 @@
     <div class="unit-choices">
         <h3>请选择单元</h3>
         <ul class="units-list">
-            <li v-for="u in units" @click="chooseUnit(u)"><button :id="'unitID'+u.id">{{u.name}}</button></li>
+            <li v-for="u in units" @click="chooseUnit(u)" :id="'unitID'+u.id">{{u.name}}</li>
         </ul>
     </div>
 
