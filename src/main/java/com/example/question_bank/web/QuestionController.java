@@ -111,6 +111,8 @@ public class QuestionController {
             System.out.println(word);
             if ( i > 30 ) break;
         }
+
+        word = word.replaceAll(" ", "");
         String regEx="[`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？-]";
         Pattern p = Pattern.compile(regEx);
         Matcher matcher = p.matcher(word.toString());
