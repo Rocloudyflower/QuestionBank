@@ -27,13 +27,11 @@
                             beans = response.data
                             // console.log(beans)
                             for (let i = 0; i < beans.length; i++) {
-                                // var input =""
-                                //
-                                var input = "<input type='radio' name='answers" + qid +"' value='" + beans[i].property.name + "'> <label>" + beans[i].property.name + "</label>"
-                                var span = "<span> | " + beans[i].value + " </span>"
-                                $("#answerItems" + qid).append(input)
-                                $("#answerItems" + qid).append(span)
-                                $("#answerItems" + qid).append("<br/>")
+
+                                let input = "<input type='radio' name='answers" + qid +"' value='" + beans[i].property.name + "'> <label>" + beans[i].property.name + "</label>"
+                                let span = "<span> | " + beans[i].value + " </span>"
+                                $("#answerItems" + qid).append(input).append(span).append("<br/>")
+
                             }
                         })
                     },
@@ -48,7 +46,6 @@
                         })
                     },
                     submitAnswer:function (question) {
-                        let judge = false
                         let qid = question.id
                         let div = '<div style="background-color: #dca7a7;color: #a94442;height: 30px;width: 100px;text-align: center;line-height: 30px;">回答错误</div>'
                         let p1 = '<p>' + question.answer + '</p>'
@@ -56,17 +53,24 @@
                         $("#answerBtn" + qid).css("display","none")
                         //    判断选了哪个选项
                         if($("input[name='answers"+ qid + "']:checked").val() === question.answer){
-                            judge = true
-                        }
-                        if(judge){
                             div = '<div style="background-color: #d0e9c6;color: #3e8f3e;height: 30px;width: 100px;text-align: center;line-height: 30px;">回答正确</div>'
                         }
-                        else{
-                            // 加入错题本
+                        else {
+                            // 先check有没有登录
+                            let url = "forecheckLogin"
+                            axios.get(url).then(function (response) {
+                                if (0 === response.data.code) {
+                                    // 加入错题本
+                                    let url_ = "mistakens?qid=" + qid
+                                    axios.post(url_).then(function (response) {
+                                        console.log(response.data)
+                                    })
+                                } else {
+                                    $("#loginModal").modal('show')
+                                }
+                            })
                         }
-
                         $("#answersDiv" + qid).append(p1).append(p2).append(div).show()
-
                     }
                 }
             })

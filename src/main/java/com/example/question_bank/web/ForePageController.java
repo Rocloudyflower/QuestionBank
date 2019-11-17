@@ -46,4 +46,9 @@ public class ForePageController {
         return "fore/exercise";
     }
 
+    @GetMapping(value = "/mistaken")
+    public String Mistaken(){
+        return "fore/mistaken";
+    }
+
 }

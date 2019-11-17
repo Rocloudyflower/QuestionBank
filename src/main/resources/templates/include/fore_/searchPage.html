@@ -48,8 +48,6 @@
                         //    上传图片文件
                         //    formdata格式
                         this.searchFile = event.target.files[0]
-                        // if(!checkEmpty(this.searchFile, "搜题图片"))
-                        //     return
 
                         let url = "search/picture"
 
@@ -77,24 +75,6 @@
                                     }
                                 }
                             })
-                            // vue.questions = response.data
-                            // if(0 === vue.questions.length){
-                            //     let search_string = keyword
-                            //     window.open("https://www.baidu.com/s?wd=" + search_string)
-                            // }
-                            // else{
-                            //     console.log(vue.questions)
-                            //     for(let i = 0; i < vue.questions.length ; i++ ){
-                            //         console.log(vue.questions[i].id)
-                            //         var temp_id = vue.questions[i].id
-                            //         $("#questionItemsTR" + temp_id).addClass('firsttime')
-                            //         $("#questionItemsTRchoice" + temp_id).empty()
-                            //         $("#questionItemsTR" + temp_id).hide()
-                            //     }
-                            // }
-                            // console.log(response.data)
-                            // $("#searchPic").val('')
-                            // vue.searchFile = ''
                         })
                     },
                     jump: function(page){

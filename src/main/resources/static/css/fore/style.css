@@ -384,6 +384,19 @@
     margin:20px auto;
 }
 
+/* mistaken.html */
+.mistakenDiv{
+    margin: 30px auto;
+    width: 70%;
+    min-width:960px;
+}
+
+.mistakenDiv .questionBlock{
+    margin:20px auto;
+}
+
+
+
 /* exercise.html */
 .unit-choices{
     margin:20px auto;
