@@ -58,7 +58,6 @@
 
                         axios.post(url,formData).then(function(response){
                             let keyword_ = response.data
-                            // let url_ =  this.uri+"?keyword=" + keyword_
                             let url_ =  "foresearch?keyword=" + keyword_
                             axios.post(url_).then(function(response) {
                                 // vue.pagination = response.data

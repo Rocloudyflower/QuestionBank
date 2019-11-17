@@ -1,10 +1,13 @@
 package com.example.question_bank.web;
 
+import com.baidu.aip.ocr.AipOcr;
 import com.example.question_bank.pojo.Question;
 import com.example.question_bank.service.PropertyValueService;
 import com.example.question_bank.service.QuestionService;
 import com.example.question_bank.util.ImageUtil;
 import com.example.question_bank.util.Page4Navigator;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,6 +32,11 @@ public class QuestionController {
     QuestionService questionService;
     @Autowired
     PropertyValueService propertyValueService;
+
+    //设置APPID/AK/SK
+    public static final String APP_ID = "17712908";
+    public static final String API_KEY = "3TvcTfSPey2VkwaGt3bOeW72";
+    public static final String SECRET_KEY = "TjhPUD6ffZK5PIGxTZZVHuFjBVbeHtqo";
 
     @PostMapping("/questions")
     public Object add(@RequestBody Question bean) throws Exception {
@@ -87,41 +96,62 @@ public class QuestionController {
 
         String imagePath = file.getAbsolutePath();
         System.out.println(imagePath);
-        File apiFolder= new File(request.getServletContext().getRealPath("api/"));
-        String apiPath = apiFolder.getAbsolutePath() + "\\baiduapi.py";
-        System.out.println(apiPath);
 
-        String[] arguments = new String[] {"python", apiPath , imagePath};
-
-        StringBuilder content = new StringBuilder();
-
-        try {
-            Process process = Runtime.getRuntime().exec(arguments);
-            BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = null;
-            while ((line = in.readLine()) != null) {
-                content.append(line);
-                System.out.println(line);
-            }
-            in.close();
-            //java代码中的process.waitFor()返回值为0表示我们调用python脚本成功，
-            //返回值为1表示调用python脚本失败，这和我们通常意义上见到的0与1定义正好相反
-            int re = process.waitFor();
-            System.out.println(re);
-            System.out.println(content);
-            content = new StringBuilder(content.toString().replaceAll(" ", ""));
-            String regEx="[`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？-]";
-            Pattern p = Pattern.compile(regEx);
-            Matcher matcher = p.matcher(content.toString());
-            System.out.println(matcher.replaceAll("").trim());
-            return matcher.replaceAll("").trim();
-
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        // 初始化一个AipOcr
+        AipOcr client;
+        client = new AipOcr(APP_ID, API_KEY, SECRET_KEY );
+        String word = "";
+        // 调用接口
+        String path = "D:\\QuestionBank\\src\\main\\webapp\\img\\image.jpg";
+        JSONObject res = client.basicAccurateGeneral(path, new HashMap<String, String>());
+        JSONArray result = res.getJSONArray("words_result");
+        for(int i = 0 ; i < result.length() ; i++){
+            JSONObject job = result.getJSONObject(i);
+            word += job.get("words").toString();
+            System.out.println(word);
+            if ( i > 30 ) break;
         }
+        String regEx="[`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？-]";
+        Pattern p = Pattern.compile(regEx);
+        Matcher matcher = p.matcher(word.toString());
+        System.out.println(matcher.replaceAll("").trim());
+        return matcher.replaceAll("").trim();
+
+//        File apiFolder= new File(request.getServletContext().getRealPath("api/"));
+//        String apiPath = apiFolder.getAbsolutePath() + "\\baiduapi.py";
+//        System.out.println(apiPath);
+//
+//        String[] arguments = new String[] {"python", apiPath , imagePath};
+//
+//        StringBuilder content = new StringBuilder();
+//
+//        try {
+//            Process process = Runtime.getRuntime().exec(arguments);
+//            BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
+//            String line = null;
+//            while ((line = in.readLine()) != null) {
+//                content.append(line);
+//                System.out.println(line);
+//            }
+//            in.close();
+//            //java代码中的process.waitFor()返回值为0表示我们调用python脚本成功，
+//            //返回值为1表示调用python脚本失败，这和我们通常意义上见到的0与1定义正好相反
+//            int re = process.waitFor();
+//            System.out.println(re);
+//            System.out.println(content);
+//            content = new StringBuilder(content.toString().replaceAll(" ", ""));
+//            String regEx="[`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？-]";
+//            Pattern p = Pattern.compile(regEx);
+//            Matcher matcher = p.matcher(content.toString());
+//            System.out.println(matcher.replaceAll("").trim());
+//            return matcher.replaceAll("").trim();
+//
+//
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
     }
 
 
