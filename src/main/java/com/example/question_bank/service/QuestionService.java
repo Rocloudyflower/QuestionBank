@@ -18,6 +18,8 @@ import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -64,13 +66,24 @@ public class QuestionService {
 //        return new Page4Navigator<>(pageFromJPA,navigatePages);
 //    }
 
-//    刷题模式
+    //    刷题模式
     public List<Question> listexcersice(int uid) {
         Unit unit = unitService.get(uid);
-//        Sort sort = new Sort(Sort.Direction.ASC,"id");
 
         List<Question> questions = questionDAO.findByUnitOrderById(unit);
-        return questions;
+
+        int exerciseNum = Math.min(questions.size(), 10);
+
+        //随机题库
+        Collections.shuffle(questions);
+        List<Question> exercices = new ArrayList<>();
+        int i = 0;
+        while (i < exerciseNum){
+            exercices.add(questions.get(i));
+            i++;
+        }
+
+        return exercices;
     }
 
     public List<Question> search(String keyword, int start, int size) {

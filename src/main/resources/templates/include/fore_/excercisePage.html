@@ -36,6 +36,13 @@
                         })
                     },
                     chooseUnit:function (unit) {
+
+                        for(temp_unit in vue.units){
+                            $("#unitID" + temp_unit.id).prop("disabled","false")
+                            console.log('#unitID' + temp_unit.id)
+                        }
+                        $("#unitID" + unit.id).prop("disabled","true")
+
                         let uid = unit.id
                         let url = this.uri + "/" + uid + "/" + "questionsinfo"
                         axios.get(url).then(function (response) {
@@ -44,6 +51,8 @@
                                 vue.getquestions(vue.questions[q])
                             }
                         })
+
+
                     },
                     submitAnswer:function (question) {
                         let qid = question.id
@@ -80,7 +89,7 @@
     <div class="unit-choices">
         <h3>请选择单元</h3>
         <ul class="units-list">
-            <li v-for="u in units" @click="chooseUnit(u)">{{u.name}}</li>
+            <li v-for="u in units" @click="chooseUnit(u)"><button :id="'unitID'+u.id">{{u.name}}</button></li>
         </ul>
     </div>
 
