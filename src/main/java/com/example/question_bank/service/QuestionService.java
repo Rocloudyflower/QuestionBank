@@ -87,16 +87,16 @@ public class QuestionService {
     }
 
     public List<Question> search(String keyword, int start, int size) {
-        initDatabase2ES();
+//        initDatabase2ES();
         FunctionScoreQueryBuilder functionScoreQueryBuilder = QueryBuilders.functionScoreQuery()
                 .add(QueryBuilders.matchQuery("detailquestion", keyword),
-                        ScoreFunctionBuilders.weightFactorFunction(100))
+                        ScoreFunctionBuilders.weightFactorFunction(1000))
                 .add(QueryBuilders.matchQuery("explanation", keyword),
                         ScoreFunctionBuilders.weightFactorFunction(50))
                 .scoreMode("sum")
-                .setMinScore(10);
-        Sort sort  = new Sort(Sort.Direction.DESC,"id");
-        Pageable pageable = new PageRequest(start, size,sort);
+                .setMinScore(100);
+
+        Pageable pageable = new PageRequest(start, 10);
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withPageable(pageable)
                 .withQuery(functionScoreQueryBuilder).build();
@@ -105,13 +105,21 @@ public class QuestionService {
     }
 
     private void initDatabase2ES() {
-        Pageable pageable = new PageRequest(0, 5);
-        Page<Question> page = questionESDAO.findAll(pageable);
-        if(page.getContent().isEmpty()) {
-            List<Question> Questions= questionDAO.findAll();
-            for (Question Question : Questions) {
-                questionESDAO.save(Question);
-            }
+
+//        清空ES数据库
+        questionESDAO.deleteAll();
+
+
+//
+//        Pageable pageable = new PageRequest(0, 5);
+//        Page<Question> page = questionESDAO.findAll(pageable);
+//        if(page.getContent().isEmpty()) {
+        List<Question> questions= questionDAO.findAll();
+        for (Question question : questions) {
+            questionESDAO.save(question);
         }
+//        }
     }
+
+
 }

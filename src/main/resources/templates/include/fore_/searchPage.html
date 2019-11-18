@@ -92,9 +92,14 @@
                                 beans = response.data
                                 console.log(beans)
                                 for (let i = 0; i < beans.length ; i++){
-                                    var p = "<p>" + beans[i].property.name + " | " + beans[i].value + "</p>"
+                                    let p = "<p>" + beans[i].property.name + " | " + beans[i].value + "</p>"
                                     $("#questionItemsTRchoice" + qid).append(p)
                                 }
+                                // 查看详情，搜索量+1
+                                let url_ = "questions/searched/"+ qid
+                                axios.post(url_).then(function(response){
+                                    console.log(response)
+                                })
                             })
                         }
                         $("#questionItemsTR" + qid).removeClass('firsttime').toggle()

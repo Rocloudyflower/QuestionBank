@@ -28,9 +28,8 @@ public class Question {
     private String answer;
     private String explanation;
     private double score;
+    private int searched;
 
-//    @Transient
-//    private List<Property> properties;
 
     @Transient
     private List<PropertyValue> propertyValues;
@@ -90,14 +89,6 @@ public class Question {
     public void setExplanation(String explanation) {
         this.explanation = explanation;
     }
-//
-//    public List<Property> getProperties() {
-//        return properties;
-//    }
-//
-//    public void setProperties(List<Property> properties) {
-//        this.properties = properties;
-//    }
 
     public List<PropertyValue> getPropertyValues() {
         return propertyValues;
@@ -105,5 +96,13 @@ public class Question {
 
     public void setPropertyValues(List<PropertyValue> propertyValues) {
         this.propertyValues = propertyValues;
+    }
+
+    public int getSearched() {
+        return searched;
+    }
+
+    public void setSearched(int searched) {
+        this.searched = searched;
     }
 }

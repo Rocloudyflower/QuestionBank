@@ -6,6 +6,7 @@ import com.example.question_bank.service.PropertyValueService;
 import com.example.question_bank.service.QuestionService;
 import com.example.question_bank.util.ImageUtil;
 import com.example.question_bank.util.Page4Navigator;
+import com.example.question_bank.util.Result;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +77,20 @@ public class QuestionController {
     public List<Question> get4exercise(@PathVariable(name = "uid") int uid) throws Exception{
         return questionService.listexcersice(uid);
     }
+
+//    搜索量 +1
+    @PostMapping("questions/searched/{qid}")
+    public Object updateSearched(@PathVariable(name = "qid") int qid) throws Exception{
+        if(questionService.get(qid) != null){
+            Question question = questionService.get(qid);
+            int searched = question.getSearched() + 1;
+            question.setSearched(searched);
+            questionService.update(question);
+            return Result.success();
+        }
+        else return Result.fail("该题目不存在");
+    }
+
 
 //    图片文字识别API + 找题
     @PostMapping("/search/picture")
