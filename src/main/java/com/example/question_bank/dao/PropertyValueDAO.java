@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface PropertyValueDAO extends JpaRepository<PropertyValue, Integer> {
 
-	public List<PropertyValue> findByQuestionOrderByIdAsc(Question question);
-	public PropertyValue getByPropertyAndQuestion (Property property, Question question);
-	public void deleteByQuestion(Question question);
+	List<PropertyValue> findByQuestionOrderByIdAsc(Question question);
+	PropertyValue getByPropertyAndQuestion (Property property, Question question);
+	void deleteByQuestion(Question question);
 
 }
 

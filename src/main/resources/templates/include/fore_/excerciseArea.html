@@ -1,19 +1,17 @@
 <div th:fragment="html" xmlns:th="http://www.w3.org/1999/xhtml">
-    <script>
-
-    </script>
 
     <div class="exerciseBlock" v-for="q in questions">
         <div class="DetailQuestion">{{q.detailquestion}}</div>
 <!--        判断题型！！-->
 <!--        选填题:可选择 + 提交按钮 -->
-        <div v-if="q.category.id == 1 || q.category.id == 2">
-            <div :id="'answerItems'+q.id"></div>
+        <div v-if="q.category.id == 1 || q.category.id == 2" id="choiceDIV">
+            <div :id="'answerItems'+q.id">
+
+            </div>
 <!--            提交题目 + 选择的答案-->
             <button class="submitAnswer" @click="submitAnswer(q)" :id="'answerBtn'+q.id">提交</button>
             <div class="answerDiv" :id="'answersDiv'+q.id">
-<!--                <p>{{q.answer}}</p>-->
-<!--                <p>{{q.explanation}}</p>-->
+
             </div>
         </div>
 <!--        简答计算题：不可选择 + 查看答案按钮-->

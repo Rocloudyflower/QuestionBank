@@ -11,6 +11,10 @@
     line-height: 40px;
     float:left;
 }
+.topper .top-welcome a, .topper .top-welcome a:hover{
+    text-decoration: none;
+    color: #000;
+}
 
 .topper .check-list{
     width: 10%;
@@ -348,10 +352,10 @@
     cursor:pointer;
     transition:.5s;
 }
-.questionBlock:hover{
-    display:inline-block;
-    transform:translateY(-12px);
-}
+/*.questionBlock:hover{*/
+/*    display:inline-block;*/
+/*    transform:translateY(-12px);*/
+/*}*/
 
 .DetailQuestion{
     font-size: 18px;
@@ -379,6 +383,19 @@
 .collectionDiv .questionBlock{
     margin:20px auto;
 }
+
+/* mistaken.html */
+.mistakenDiv{
+    margin: 30px auto;
+    width: 70%;
+    min-width:960px;
+}
+
+.mistakenDiv .questionBlock{
+    margin:20px auto;
+}
+
+
 
 /* exercise.html */
 .unit-choices{
@@ -438,4 +455,17 @@
     border-radius: 6px;
     background-color: rgb(235,211,180);
     color: #fff;
+}
+
+/*  searchPic */
+.search-photo{
+    position:relative;
+}
+#searchPic{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    opacity:0;
 }

@@ -8,7 +8,8 @@
                 questions:[],
                 file:null,
                 pagination:{},
-                user:{email:'',password:''}
+                user:{email: '',password: ''},
+                searchFile: ''
             }
 
             // VueModel
@@ -23,20 +24,58 @@
                         keyword = $(" input[ name='keyword' ] ").val()
                         let url =  this.uri+"?keyword=" + keyword
                         axios.post(url).then(function(response) {
-                            vue.pagination = response.data
-                            vue.questions = response.data.content
+                            // vue.pagination = response.data
+                            vue.questions = response.data
+                            if(0 === vue.questions.length){
+                                let search_string = keyword
+                                window.open("https://www.baidu.com/s?wd=" + search_string)
+                            }
+                            else{
+                                console.log(vue.questions)
+                                for(let i = 0; i < vue.questions.length ; i++ ){
+                                    console.log(vue.questions[i].id)
+                                    var temp_id = vue.questions[i].id
+                                    $("#questionItemsTR" + temp_id).addClass('firsttime')
+                                    $("#questionItemsTRchoice" + temp_id).empty()
+                                    $("#questionItemsTR" + temp_id).hide()
+                                }
+                            }
                         })
 
-                        for(var i = 0; i < vue.questions.length ; i++ ){
-                            console.log(vue.questions[i].id)
-                            var temp_id = vue.questions[i].id
-                            $("#questionItemsTR" + temp_id).addClass('firsttime')
-                            $("#questionItemsTRchoice" + temp_id).empty()
-                            $("#questionItemsTR" + temp_id).hide()
-                        }
-                    },
-                    photoSearch:function(){
 
+                    },
+                    photoSearch:function(event){
+                        //    上传图片文件
+                        //    formdata格式
+                        this.searchFile = event.target.files[0]
+
+                        let url = "search/picture"
+
+                        let formData = new FormData()
+                        formData.append("image", this.searchFile)
+
+                        axios.post(url,formData).then(function(response){
+                            let keyword_ = response.data
+                            let url_ =  "foresearch?keyword=" + keyword_
+                            axios.post(url_).then(function(response) {
+                                // vue.pagination = response.data
+                                vue.questions = response.data
+                                if(0 === vue.questions.length){
+                                    let search_string = keyword_
+                                    window.open("https://www.baidu.com/s?wd=" + search_string)
+                                }
+                                else{
+                                    console.log(vue.questions)
+                                    for(let i = 0; i < vue.questions.length ; i++ ){
+                                        console.log(vue.questions[i].id)
+                                        var temp_id = vue.questions[i].id
+                                        $("#questionItemsTR" + temp_id).addClass('firsttime')
+                                        $("#questionItemsTRchoice" + temp_id).empty()
+                                        $("#questionItemsTR" + temp_id).hide()
+                                    }
+                                }
+                            })
+                        })
                     },
                     jump: function(page){
                         jump(page,vue)
@@ -53,9 +92,14 @@
                                 beans = response.data
                                 console.log(beans)
                                 for (let i = 0; i < beans.length ; i++){
-                                    var p = "<p>" + beans[i].property.name + " | " + beans[i].value + "</p>"
+                                    let p = "<p>" + beans[i].property.name + " | " + beans[i].value + "</p>"
                                     $("#questionItemsTRchoice" + qid).append(p)
                                 }
+                                // 查看详情，搜索量+1
+                                let url_ = "questions/searched/"+ qid
+                                axios.post(url_).then(function(response){
+                                    console.log(response)
+                                })
                             })
                         }
                         $("#questionItemsTR" + qid).removeClass('firsttime').toggle()
@@ -96,7 +140,11 @@
                     <button class="search-btn" @click="textSearch">搜索🔍</button>
                 </li>
                 <li>
-                    <button class="search-photo" @click="photoSearch">📷</button>
+
+                    <button class="search-photo" >
+                        📷
+                        <input id="searchPic" type="file" @change="photoSearch($event)" name="image"/>
+                    </button>
                 </li>
             </ul>
 

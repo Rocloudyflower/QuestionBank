@@ -1,6 +1,7 @@
 package com.example.question_bank.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 @Entity
 @Table(name = "question")
 @JsonIgnoreProperties({ "handler","hibernateLazyInitializer" })
+@Document(indexName = "questionbank",type = "question")
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,9 +28,8 @@ public class Question {
     private String answer;
     private String explanation;
     private double score;
+    private int searched;
 
-//    @Transient
-//    private List<Property> properties;
 
     @Transient
     private List<PropertyValue> propertyValues;
@@ -88,14 +89,6 @@ public class Question {
     public void setExplanation(String explanation) {
         this.explanation = explanation;
     }
-//
-//    public List<Property> getProperties() {
-//        return properties;
-//    }
-//
-//    public void setProperties(List<Property> properties) {
-//        this.properties = properties;
-//    }
 
     public List<PropertyValue> getPropertyValues() {
         return propertyValues;
@@ -103,5 +96,13 @@ public class Question {
 
     public void setPropertyValues(List<PropertyValue> propertyValues) {
         this.propertyValues = propertyValues;
+    }
+
+    public int getSearched() {
+        return searched;
+    }
+
+    public void setSearched(int searched) {
+        this.searched = searched;
     }
 }

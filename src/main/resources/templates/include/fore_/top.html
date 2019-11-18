@@ -1,5 +1,5 @@
 <div class="topper" th:fragment="html" xmlns:th="http://www.w3.org/1999/xhtml">
-    <span class="top-welcome" href="home">喵，欢迎来到 计算机网络 大题库</span>
+    <span class="top-welcome"><a href="home">喵，欢迎来到 计算机网络 大题库</a></span>
     <ul th:if="${null == session.user}" class="check-list">
         <li><a href="login">请登录</a></li>
         <li><a href="register">免费注册</a></li>
@@ -9,7 +9,7 @@
             <a href="collection">我的收藏夹</a>
         </li>
         <li>
-            <a href="admin_mistake_list">我的错题本</a>
+            <a href="mistaken">我的错题本</a>
         </li>
         <li>
             <a href="admin_searched_list">我的足迹</a>

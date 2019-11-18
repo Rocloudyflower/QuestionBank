@@ -1,0 +1,27 @@
+<div th:fragment="html" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="mistakenQuestions">
+        <div class="questionBlock" v-for="q in questions">
+            <!--        搞个分页 + 点击进入题目详情 -->
+            <p class="DetailQuestion">
+                {{q.detailquestion}}
+            </p>
+            <span class="CategoryAndUnit">
+                {{q.unit.name}} | {{q.category.name}}
+            </span>
+            <button @click="showQuestionItem(q)">
+                查看详情
+            </button>
+            <button @click="deleteQuestionItem(q)">
+                移出错题本
+            </button>
+            <div class="questionItemTR firsttime" :id="'mistakenItemsTR'+q.id" style=" display:none ">
+                <p :id="'mistakenItemsTRchoice'+q.id"></p>
+                <p>{{q.answer}}</p>
+                <p>{{q.explanation}}</p>
+            </div>
+        </div>
+        <div v-if="0 == questions.length" class="noMatch">错题本空空如也哟！</div>
+        <!--        <div th:replace="include/fore_/forePage::html" ></div>-->
+        <div style="clear:both"></div>
+    </div>
+</div>

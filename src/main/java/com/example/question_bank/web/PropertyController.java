@@ -1,17 +1,27 @@
 package com.example.question_bank.web;
 
 import com.example.question_bank.pojo.Property;
+import com.example.question_bank.pojo.PropertyValue;
+import com.example.question_bank.pojo.Question;
 import com.example.question_bank.service.PropertyService;
+import com.example.question_bank.service.PropertyValueService;
+import com.example.question_bank.service.QuestionService;
 import com.example.question_bank.util.Page4Navigator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.beans.Transient;
+import java.util.List;
 
 @RestController
 public class PropertyController {
     @Autowired
     PropertyService propertyService;
+    @Autowired
+    PropertyValueService propertyValueService;
+    @Autowired
+    QuestionService questionService;
 
     @GetMapping("/categories/{cid}/properties")
     public Page4Navigator<Property> list(@PathVariable("cid") int cid, @RequestParam(value = "start", defaultValue = "0") int start, @RequestParam(value = "size", defaultValue = "10") int size) throws Exception {

@@ -21,7 +21,7 @@ public class PropertyValueService {
     public void init(Question question) {
         List<Property> propertys= propertyService.listByCategory(question.getCategory());
         for (Property property: propertys) {
-            PropertyValue propertyValue = getByPropertyAndProduct(question, property);
+            PropertyValue propertyValue = getByPropertyAndQuestion(question, property);
             if(null == propertyValue){
                 propertyValue = new PropertyValue();
                 propertyValue.setQuestion(question);
@@ -31,7 +31,7 @@ public class PropertyValueService {
         }
     }
 
-    public PropertyValue getByPropertyAndProduct(Question question, Property property) {
+    public PropertyValue getByPropertyAndQuestion(Question question, Property property) {
         return propertyValueDAO.getByPropertyAndQuestion(property,question);
     }
 
