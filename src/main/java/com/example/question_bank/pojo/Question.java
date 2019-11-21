@@ -29,7 +29,7 @@ public class Question {
     private String explanation;
     private double score;
     private int searched;
-
+    private int evatimes;
 
     @Transient
     private List<PropertyValue> propertyValues;
@@ -104,5 +104,13 @@ public class Question {
 
     public void setSearched(int searched) {
         this.searched = searched;
+    }
+
+    public int getEvatimes() {
+        return evatimes;
+    }
+
+    public void setEvatimes(int evatimes) {
+        this.evatimes = evatimes;
     }
 }

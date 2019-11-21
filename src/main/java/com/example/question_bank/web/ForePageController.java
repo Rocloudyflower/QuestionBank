@@ -51,4 +51,9 @@ public class ForePageController {
         return "fore/mistaken";
     }
 
+    @GetMapping(value = "/history")
+    public String history(){
+        return "fore/history";
+    }
+
 }

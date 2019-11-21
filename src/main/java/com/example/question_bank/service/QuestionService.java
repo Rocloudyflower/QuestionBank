@@ -110,15 +110,23 @@ public class QuestionService {
         questionESDAO.deleteAll();
 
 
-//
-//        Pageable pageable = new PageRequest(0, 5);
-//        Page<Question> page = questionESDAO.findAll(pageable);
-//        if(page.getContent().isEmpty()) {
-        List<Question> questions= questionDAO.findAll();
-        for (Question question : questions) {
-            questionESDAO.save(question);
+        Pageable pageable = new PageRequest(0, 5);
+        Page<Question> page = questionESDAO.findAll(pageable);
+        if(page.getContent().isEmpty()) {
+            List<Question> questions= questionDAO.findAll();
+            questionESDAO.save(questions);
         }
-//        }
+    }
+
+    //用户评分
+    public void questionsave(int id, double userScore){ // id为用户评分的题目的id，userScore为用户的评分
+        Question currentQuestion = get(id);
+        int totalTimes = currentQuestion.getEvatimes();
+        double currentScore = currentQuestion.getScore();
+        double avgScore = ( currentScore * totalTimes + userScore )/( totalTimes + 1 );
+        currentQuestion.setEvatimes( totalTimes + 1 );
+        currentQuestion.setScore(avgScore);
+        update(currentQuestion);
     }
 
 

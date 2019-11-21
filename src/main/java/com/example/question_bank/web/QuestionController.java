@@ -2,8 +2,11 @@ package com.example.question_bank.web;
 
 import com.baidu.aip.ocr.AipOcr;
 import com.example.question_bank.pojo.Question;
+import com.example.question_bank.pojo.SearchRecord;
+import com.example.question_bank.pojo.User;
 import com.example.question_bank.service.PropertyValueService;
 import com.example.question_bank.service.QuestionService;
+import com.example.question_bank.service.SearchRecordService;
 import com.example.question_bank.util.ImageUtil;
 import com.example.question_bank.util.Page4Navigator;
 import com.example.question_bank.util.Result;
@@ -17,11 +20,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -33,6 +39,8 @@ public class QuestionController {
     QuestionService questionService;
     @Autowired
     PropertyValueService propertyValueService;
+    @Autowired
+    SearchRecordService searchRecordService;
 
     //设置APPID/AK/SK
     public static final String APP_ID = "17712908";
@@ -78,14 +86,33 @@ public class QuestionController {
         return questionService.listexcersice(uid);
     }
 
-//    搜索量 +1
+//    搜索量 +1  && 加入到用户足迹
     @PostMapping("questions/searched/{qid}")
-    public Object updateSearched(@PathVariable(name = "qid") int qid) throws Exception{
+    public Object updateSearched(@PathVariable(name = "qid") int qid, HttpSession session) throws Exception{
         if(questionService.get(qid) != null){
+
             Question question = questionService.get(qid);
             int searched = question.getSearched() + 1;
             question.setSearched(searched);
             questionService.update(question);
+
+            User user = (User) session.getAttribute("user");
+            if (user != null){
+
+                SearchRecord searchRecord = new SearchRecord();
+                searchRecord.setUser(user);
+                searchRecord.setQuestion(question);
+
+                //获取系统时间
+                Date dt = new Date();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String currentTime = sdf.format(dt);
+                searchRecord.setTime(currentTime);
+//                searchRecord.setTime(dt);
+
+                searchRecordService.add(searchRecord);
+            }
+
             return Result.success();
         }
         else return Result.fail("该题目不存在");
@@ -136,5 +163,11 @@ public class QuestionController {
 
     }
 
+//    用户评分
+    @PostMapping("questions/evaluate/{qid}")
+    public Object evaluate(@PathVariable(name = "qid") int qid, double score){
+        questionService.questionsave(qid,score);
+        return Result.success();
+    }
 
 }

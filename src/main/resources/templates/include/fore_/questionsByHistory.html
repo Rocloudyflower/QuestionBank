@@ -1,0 +1,24 @@
+<div th:fragment="html" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="historyQuestions">
+        <div class="questionBlock" v-for="q in questions">
+            <!--        搞个分页 + 点击进入题目详情 -->
+            <p class="DetailQuestion">
+                {{q.detailquestion}}
+            </p>
+            <span class="CategoryAndUnit">
+                {{q.unit.name}} | {{q.category.name}}
+            </span>
+            <button @click="showQuestionItem(q)">
+                查看详情
+            </button>
+            <div class="questionItemTR firsttime" :id="'historyItemsTR'+q.id" style=" display:none ">
+                <p :id="'historyItemsTRchoice'+q.id"></p>
+                <p>{{q.answer}}</p>
+                <p>{{q.explanation}}</p>
+            </div>
+        </div>
+        <div v-if="0 == questions.length" class="noMatch">足迹空空如也哟！</div>
+        <!--        <div th:replace="include/fore_/forePage::html" ></div>-->
+        <div style="clear:both"></div>
+    </div>
+</div>
