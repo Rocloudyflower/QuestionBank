@@ -22,13 +22,13 @@ public class CategoryController {
     }
 
     @PostMapping("/categories")
-    public Object add(Category bean, HttpServletRequest request) throws Exception {
+    public Object add(Category bean) throws Exception {
         categoryService.add(bean);
         return bean;
     }
 
     @DeleteMapping("/categories/{id}")
-    public String delete(@PathVariable("id") int id, HttpServletRequest request)  throws Exception {
+    public String delete(@PathVariable("id") int id)  throws Exception {
         categoryService.delete(id);
         return null;
     }

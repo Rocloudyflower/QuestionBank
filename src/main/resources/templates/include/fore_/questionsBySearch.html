@@ -1,6 +1,6 @@
 <div th:fragment="html" xmlns:th="http://www.w3.org/1999/xhtml">
     <div class="searchQuestions">
-        <div class="questionBlock" v-for="q in questions">
+        <div class="questionBlock" v-for="(q,index) in questions" :v-key="q.id">
 <!--        搞个分页 + 点击进入题目详情 -->
 
             <p class="DetailQuestion">
@@ -15,7 +15,7 @@
             <button @click="addCollection(q)">
                 加入收藏夹
             </button>
-            <span class="pull-right">综合评分 {{q.evatimes}}</span>
+            <span class="pull-right">综合评分 {{q.score}}</span>
 <!--            <button @click="removeColletion(q)">-->
 <!--                移出收藏夹-->
 <!--            </button>-->
@@ -24,14 +24,22 @@
                 <p>{{q.answer}}</p>
                 <p>{{q.explanation}}</p>
                 <button @click="evaluateQuestion(q)">我要评分</button>
-                <div :id="'evaluateDIV'+ q.id" style="display: none">
-                    <div class='score'>
-                        <div class='score-expression'></div>
+                <div :id="'evaluateDIV'+ q.id">
+                    <div style="display: inline-block" :id="'rateDIV'+q.id">
+                        <div class="rate-content">
+                            <input type="radio" name="rate" class="rate-input" value="5">
+                            <input type="radio" name="rate" class="rate-input" value="4">
+                            <input type="radio" name="rate" class="rate-input" value="3">
+                            <input type="radio" name="rate" class="rate-input" value="2">
+                            <input type="radio" name="rate" class="rate-input" value="1">
+                        </div>
                     </div>
+
                     <div class='result'>
-                        <button>提交</button>
-                        <div class='result-score'></div>
+                        <button :id="'submitEvaluation'+q.id" @click="submitEvaluation(q,index)">提交</button>
+                        <div class='result-score' :id="'resultscore'+q.id"></div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -39,130 +47,4 @@
 <!--        <div th:replace="include/fore_/forePage::html" ></div>-->
         <div style="clear:both"></div>
     </div>
-    <script>
-        let Score = function(obj,option){
-            let self = this
-            this.obj = obj
-            this.len = 5
-            this.eachHeight = 47
-            this.eachWidth = null
-            this.countEachImg()
-
-            this.defaultDOM()
-            this.defaultIcon = this.obj.find('.default-icon')
-            this.description = this.obj.find('.score-description')
-
-            this.defaultIcon.hover(function(e){
-                let level = $(this).attr('score-level')
-                $(this).parents("[class^='score-']").children('.score-description').html(self.selectLevelDescript(level))
-                let _index = $(this).parents("[class^='score-']").index() - 1
-
-                for(let i = 0  i<self.len  i++){
-                    if(i < level){
-                        $(this).parents("[class^='score-']").find('.default-icon').eq(i).css({
-                            "backgroundPositionX":-self.eachWidth * (level-1),
-                            "backgroundPositionY":-self.eachHeight * _index
-                        })
-                    }else{
-                        $(this).parents("[class^='score-']").find('.default-icon').eq(i).css({"backgroundPositionX":"right"})
-                    }
-                }
-            },function(e){
-                let level = $(this).parent('.default-statu').attr('active-level') || 0
-                $(this).parents("[class^='score-']").children('.score-description').html(self.selectLevelDescript(level))
-                let customLevel = $(this).parent('.default-statu').attr('active-level')
-                for(let i = 0  i<self.len  i++){
-                    if(i < parseInt(customLevel)){
-                        $(this).parents("[class^='score-']").find('.default-icon').eq(i).css({"backgroundPositionX":-self.eachWidth * (level-1)})
-                    }else{
-                        $(this).parents("[class^='score-']").find('.default-icon').eq(i).css({"backgroundPositionX":"right"})
-                    }
-                }
-            }).on('click',function(e){
-                e.stopPropagation()
-                level = $(this).attr('score-level')
-                $(this).parent('.default-statu').attr('active-level',level)
-                $(this).parents("[class^='score-']").children('.score-description').html(self.selectLevelDescript(level))
-            })
-        }
-
-        Score.prototype = {
-
-            selectLevelDescript: function(n){
-                let descriptHTML = ''
-                switch(parseInt(n))
-                {
-                    case 1:
-                        descriptHTML = '非常不好'
-                        break
-                    case 2:
-                        descriptHTML = '很不好'
-                        break
-                    case 3:
-                        descriptHTML = '一般般'
-                        break
-                    case 4:
-                        descriptHTML = '很好'
-                        break
-                    case 5:
-                        descriptHTML = '非常好'
-                        break
-                    default:
-                        descriptHTML = '请评价'
-                }
-                return descriptHTML
-            },
-            defaultDOM : function(){
-                let _scoreChild = this.obj.children("[class^='score-']")
-                let _len = _scoreChild.length
-                for(let i = 0 i< _len  i++){
-                    let _defaultHTML = "<div class='default-statu' icon-type='"+_scoreChild.eq(i).attr('class')+"'></div><div class='score-description' >请对该产品评价</div>"
-                    _scoreChild.eq(i).append(_defaultHTML)
-                }
-
-                let _default = this.obj.find('.default-statu')
-
-                _default.html(this.eachChildrenDOM())
-            },
-            eachChildrenDOM : function(){
-                let _MainHTML = ""
-                for(let j = 1  j <= this.len  j++){
-                    _MainHTML += "<span class='default-icon'  score-level="+ j +"></span>"
-                }
-                return _MainHTML
-            },
-            countEachImg : function(){
-                let _this_ = this
-                let img = new Image()
-                _this_.obj.prepend('<img class="scoreHiddenImage" style="display:none" src="../../../static/img/icon.png" alt="">')
-                $(img).on('load error',function(){
-                    // $('img.scoreHiddenImage').attr('src',img.src)
-                    each = $('img').width() / 6
-                    _this_.eachWidth = each
-                })
-            },
-        }
-
-        $.fn.extend({
-            score:function(){
-                new Score(this)
-            }
-        })
-        $('.score').score()
-        $('.result button').on('click',function(){
-            let _form_ = true ,
-                scoreArr = [] ,
-                eachEle = $('.score').children('[class^="score-"]')
-            eachEle.each(function(index, el) {
-                let l = $(el).children().attr('active-level')
-                if(!l) _form_ = false
-                scoreArr.push(l)
-            })
-
-            if(_form_){
-                let count = scoreArr.reduce(function(p,c){ return p + parseInt(c) },0)
-                $('.result-score').html('综合得分：'+(count/scoreArr.length).toFixed(2))
-            }
-        })
-    </script>
 </div>

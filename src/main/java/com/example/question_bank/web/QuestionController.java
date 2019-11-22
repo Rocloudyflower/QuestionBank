@@ -118,7 +118,6 @@ public class QuestionController {
         else return Result.fail("该题目不存在");
     }
 
-
 //    图片文字识别API + 找题
     @PostMapping("/search/picture")
     public Object searchByPic(MultipartFile image, HttpServletRequest request){
@@ -165,9 +164,12 @@ public class QuestionController {
 
 //    用户评分
     @PostMapping("questions/evaluate/{qid}")
-    public Object evaluate(@PathVariable(name = "qid") int qid, double score){
-        questionService.questionsave(qid,score);
-        return Result.success();
+    public Object evaluate(@PathVariable(name = "qid") int qid, HttpServletRequest request) throws Exception {
+        String score = request.getParameter("score");
+        questionService.questionsave(qid,Double.parseDouble(score));
+
+        String finalScore = String.valueOf(questionService.get(qid).getScore());
+        return Result.success(finalScore);
     }
 
 }

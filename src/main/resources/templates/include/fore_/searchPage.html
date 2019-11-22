@@ -126,9 +126,28 @@
                             }
                         })
                     },
-                    evaluateQuestion:function (question) {
-                        console.log("click!")
-                        $('#evaluateDIV'+question.id).show()
+                    evaluateQuestion:function (question,index) {
+                        $('#evaluateDIV'+question.id).toggle()
+                        submitEvaluation(question,index)
+                    },
+                    submitEvaluation:function (question,index) {
+                        let score = $("input[name='rate']:checked").val()
+                        console.log("score:" + score)
+                        let url = "questions/evaluate/" + question.id
+                        let formdata = new FormData()
+                        formdata.set("score",score)
+                        axios.post(url,formdata).then(response => {
+                            console.log(response.data)
+                            let finalScore = response.data.data
+                            $("#submitEvaluation"+question.id).css("display","none")
+                            $("#rateDIV"+question.id).css("display","none")
+                            let p = `<p>提交成功！评分：${score} 分</p>`
+                            $("#resultscore"+question.id).append(p)
+                        //    把综合评分改掉！
+                            vue.questions[index].score = finalScore
+
+
+                        })
                     }
                 }
             })

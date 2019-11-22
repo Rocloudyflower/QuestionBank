@@ -471,6 +471,40 @@
 }
 
 /* evaluate.html */
+/* 单个星星 */
+.rate-content{
+    display:flex;
+    flex-direction:row-reverse;
+    width: 100px;
+}
+
+input[name="rate"] {
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+input[name="rate"]::after {
+    content: "oo";
+    width: 10px;
+    height: 10px;
+    color:#ccc;
+    background-color: #ccc;
+    border-radius: 50%;
+}
+
+/* 选中与移上去样式变化 */
+input[name="rate"]:checked::after,
+input[name="rate"]:checked~input[name='rate']::after,
+input[name="rate"]:hover::after,
+input[name="rate"]:hover~input[name='rate']::after {
+    content: "oo";
+    color:#ffa822;
+    background-color: #ffa822;
+}
+
+
+/* history.html */
 .historyDiv{
     margin: 30px auto;
     width: 70%;
@@ -480,3 +514,4 @@
 .historyDiv .questionBlock{
     margin:20px auto;
 }
+
