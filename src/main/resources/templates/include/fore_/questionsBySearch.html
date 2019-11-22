@@ -1,6 +1,6 @@
 <div th:fragment="html" xmlns:th="http://www.w3.org/1999/xhtml">
     <div class="searchQuestions">
-        <div class="questionBlock" v-for="(q,index) in questions" :v-key="q.id">
+        <div class="questionBlock" v-for="(q,index) in questions" :key="q.id">
 <!--        搞个分页 + 点击进入题目详情 -->
 
             <p class="DetailQuestion">
@@ -9,23 +9,20 @@
             <span class="CategoryAndUnit">
                 {{q.unit.name}} | {{q.category.name}}
             </span>
-            <button @click="showQuestionItem(q)">
+            <button @click="showQuestionItem(q,index)">
                 查看详情
             </button>
             <button @click="addCollection(q)">
                 加入收藏夹
             </button>
             <span class="pull-right">综合评分 {{q.score}}</span>
-<!--            <button @click="removeColletion(q)">-->
-<!--                移出收藏夹-->
-<!--            </button>-->
-            <div class="questionItemTR firsttime" :id="'questionItemsTR'+q.id" style=" display:none ">
-                <p :id="'questionItemsTRchoice'+q.id"></p>
+            <div class="questionItemTR firsttime" :id="'questionItemsTR'+index" style=" display:none ">
+                <div :id="'questionItemsChoices'+index"></div>
                 <p>{{q.answer}}</p>
                 <p>{{q.explanation}}</p>
                 <button @click="evaluateQuestion(q)">我要评分</button>
-                <div :id="'evaluateDIV'+ q.id">
-                    <div style="display: inline-block" :id="'rateDIV'+q.id">
+                <div :id="'evaluateDIV'+ index">
+                    <div style="display: inline-block" :id="'rateDIV'+index">
                         <div class="rate-content">
                             <input type="radio" name="rate" class="rate-input" value="5">
                             <input type="radio" name="rate" class="rate-input" value="4">
@@ -36,8 +33,8 @@
                     </div>
 
                     <div class='result'>
-                        <button :id="'submitEvaluation'+q.id" @click="submitEvaluation(q,index)">提交</button>
-                        <div class='result-score' :id="'resultscore'+q.id"></div>
+                        <button :id="'submitEvaluation'+index" @click="submitEvaluation(q,index)">提交</button>
+                        <div class='result-score' :id="'resultscore'+index"></div>
                     </div>
 
                 </div>

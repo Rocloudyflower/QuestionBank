@@ -37,10 +37,12 @@ public class QuestionService {
 
     public void add(Question bean) {
         questionDAO.save(bean);
+        questionESDAO.save(bean);
     }
 
     public void delete(int id) {
         questionDAO.delete(id);
+        questionESDAO.delete(id);
     }
 
     public Question get(int id) {
@@ -49,6 +51,7 @@ public class QuestionService {
 
     public void update(Question bean) {
         questionDAO.save(bean);
+        questionESDAO.save(bean);
     }
 
     public Page4Navigator<Question> list(int uid, int start, int size, int navigatePages){
