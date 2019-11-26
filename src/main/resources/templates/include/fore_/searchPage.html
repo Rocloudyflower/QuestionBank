@@ -1,4 +1,4 @@
-<div th:fragment="html" xmlns:th="http://www.w3.org/1999/xhtml">
+<div th:fragment="html" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
 
     <script>
         $(function () {
@@ -9,7 +9,8 @@
                 file:null,
                 pagination:{},
                 user: {email: '',password: ''},
-                searchFile: ''
+                searchFile: '',
+                results:[]
             }
 
             // VueModel
@@ -21,7 +22,6 @@
                 },
                 methods:{
                     textSearch:function(){
-
 
                         $("div[id^='questionItemsTR']").addClass('firsttime').hide()
                         $("div[id^='questionItemsChoices']").empty().show()
@@ -63,13 +63,6 @@
                                     $("div[id^='questionItemsChoices']").empty()
                                     $("div[id^='questionItemsTR']").addClass('firsttime').hide()
 
-                                    // for(let i = 0; i < vue.questions.length ; i++ ){
-                                    //     console.log(vue.questions[i].id)
-                                    //     var temp_id = vue.questions[i].id
-                                    //     $("#questionItemsTR" + temp_id).addClass('firsttime')
-                                    //     $("#questionItemsChoices" + temp_id).empty()
-                                    //     $("#questionItemsTR" + temp_id).hide()
-                                    // }
                                 }
                             })
                         })
@@ -144,8 +137,17 @@
                         //    把综合评分改掉！
                             vue.questions[index].score = finalScore
 
-
                         })
+                    },
+                    expandSearch:function () {
+                        keyword = $(" input[ name='keyword' ] ").val()
+                        let url =  this.uri+"?keyword=" + keyword
+                        axios.post(url).then(function(response) {
+                            vue.results = response.data
+                        })
+                    },
+                    chooseExpand:function (result) {
+                        
                     }
                 }
             })
@@ -156,8 +158,12 @@
 
     <div class="searchArea">
         <img th:src="@{/img/logo.png}" alt="" src="../../../static/img/logo.png">
-            <input type="text" class="searchInput" name="keyword">
-            <ul class="btn-list">
+        <input class="searchInput" name="keyword" type="text" autocomplete="off" list="expand" v-on:input="expandSearch">
+        <datalist id="expand">
+            <option v-for="result in results" :v-key="result.id" @click="chooseExpand(result)">{{result.detailquestion | subStringFilter(0,30)}}</option>
+        </datalist>
+
+        <ul class="btn-list">
                 <li>
                     <button class="search-btn" @click="textSearch">搜索🔍</button>
                 </li>

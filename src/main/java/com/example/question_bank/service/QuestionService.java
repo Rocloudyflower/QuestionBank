@@ -131,5 +131,10 @@ public class QuestionService {
         update(currentQuestion);
     }
 
+    //    关键词相关 -- 按xx排序，返回前10个
+    public List<Question> searchQuestionDetail(String keystring)
+    {
+        return questionDAO.findByDetailquestionLike(keystring);
+    }
 
 }

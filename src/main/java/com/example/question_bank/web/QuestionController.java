@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -171,5 +172,24 @@ public class QuestionController {
         String finalScore = String.valueOf(questionService.get(qid).getScore());
         return Result.success(finalScore);
     }
+
+//    关键热词
+//    @GetMapping("questions/hotsearched")
+//    public List<Object> hotsearched() {
+//
+//    }
+
+//    搜索扩展
+    @GetMapping("questions/expand")
+    public List<Question> expand(String keyString){
+        List<Question> questions = questionService.searchQuestionDetail(keyString);
+        int num = Math.min(questions.size(), 10);
+        List<Question> result = new ArrayList<>();
+        for(int i = 0; i < num; i++){
+            result.add(questions.get(i));
+        }
+        return result;
+    }
+
 
 }
