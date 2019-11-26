@@ -19,7 +19,7 @@
                             vue.units = response.data.content
                         })
                     },
-                    getquestions:function(question){
+                    getquestions:function(question,index){
                         let qid = question.id
                         let url = "questions/" + qid + "/propertyValues"
                         let beans = {}
@@ -28,9 +28,9 @@
                             // console.log(beans)
                             for (let i = 0; i < beans.length; i++) {
 
-                                let input = "<input type='radio' name='answers" + qid +"' value='" + beans[i].property.name + "'> <label>" + beans[i].property.name + "</label>"
+                                let input = "<input type='radio' name='answers" + index +"' value='" + beans[i].property.name + "'> <label>" + beans[i].property.name + "</label>"
                                 let span = "<span> | " + beans[i].value + " </span>"
-                                $("#answerItems" + qid).append(input).append(span).append("<br/>")
+                                $("#answerItems" + index).append(input).append(span).append("<br/>")
 
                             }
                         })
@@ -49,9 +49,7 @@
 
                         }
 
-                        for(let temp_unit in vue.units){
-                            $("#unitID" + vue.units[temp_unit].id).removeClass("disabled")
-                        }
+                        $("div[id^='unitID']").removeClass("disabled")
                         $("#unitID" + unit.id).addClass("disabled")
 
                     },

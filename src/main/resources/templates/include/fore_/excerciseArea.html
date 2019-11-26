@@ -1,27 +1,29 @@
 <div th:fragment="html" xmlns:th="http://www.w3.org/1999/xhtml">
 
-    <div class="exerciseBlock" v-for="q in questions">
+    <div class="exerciseBlock" v-for="(q,index) in questions">
         <div class="DetailQuestion">{{q.detailquestion}}</div>
 <!--        判断题型！！-->
 <!--        选填题:可选择 + 提交按钮 -->
         <div v-if="q.category.id == 1 || q.category.id == 2" id="choiceDIV">
-            <div :id="'answerItems'+q.id">
+            <div :id="'answerItems'+index">
 
             </div>
 <!--            提交题目 + 选择的答案-->
-            <button class="submitAnswer" @click="submitAnswer(q)" :id="'answerBtn'+q.id">提交</button>
-            <div class="answerDiv" :id="'answersDiv'+q.id">
+            <button class="submitAnswer" @click="submitAnswer(q,index)" :id="'answerBtn'+index">提交</button>
+            <div class="answerDiv" :id="'answersDiv'+index">
 
             </div>
         </div>
+
+<!--        <button class="submitAnswer" @click="submitAnswer(q,index)" :id="'answerBtn'+index">提交</button>-->
 <!--        简答计算题：不可选择 + 查看答案按钮-->
-        <div v-if="q.category.id == 3 || q.category.id == 4">
-            <div class="answerDiv" style="display: none;">
-                <p>{{q.answer}}</p>
-                <p>{{q.explanation}}</p>
-            </div>
-            <!--            提交题目 + 用jQuery判断 -->
-            <button class="showAnswer" @click="showQuestionItem(q)">查看答案</button>
-        </div>
+<!--        <div v-if="q.category.id == 3 || q.category.id == 4">-->
+<!--            <div class="answerDiv" style="display: none;">-->
+<!--                <p>{{q.answer}}</p>-->
+<!--                <p>{{q.explanation}}</p>-->
+<!--            </div>-->
+<!--            &lt;!&ndash;            提交题目 + 用jQuery判断 &ndash;&gt;-->
+<!--            <button class="showAnswer" @click="showQuestionItem(q)">查看答案</button>-->
+<!--        </div>-->
     </div>
 </div>

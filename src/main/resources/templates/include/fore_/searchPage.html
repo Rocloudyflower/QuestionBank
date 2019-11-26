@@ -7,7 +7,7 @@
                 uri:"foresearch",
                 questions:[],
                 file:null,
-                pagination:{},
+                // pagination:{},
                 user: {email: '',password: ''},
                 searchFile: '',
                 results:[]
@@ -144,10 +144,13 @@
                         let url =  this.uri+"?keyword=" + keyword
                         axios.post(url).then(function(response) {
                             vue.results = response.data
+                            console.log(vue.results)
                         })
                     },
                     chooseExpand:function (result) {
-                        
+                        // $(" input[ name='keyword' ] ").val(result.detailquestion)
+                        vue.textSearch()
+                        vue.results = []
                     }
                 }
             })
@@ -158,9 +161,13 @@
 
     <div class="searchArea">
         <img th:src="@{/img/logo.png}" alt="" src="../../../static/img/logo.png">
-        <input class="searchInput" name="keyword" type="text" autocomplete="off" list="expand" v-on:input="expandSearch">
+        <input class="searchInput" name="keyword" type="text" list="expand" v-on:input="expandSearch()">
         <datalist id="expand">
-            <option v-for="result in results" :v-key="result.id" @click="chooseExpand(result)">{{result.detailquestion | subStringFilter(0,30)}}</option>
+            <select>
+                <option v-for="result in results" @click="chooseExpand(result)" :value="{{result.id">{{result.detailquestion | subStringFilter(0,30)}}</option>
+                <!-- more -->
+            </select>
+            <!--            <option v-for="result in results" :key="result.id" @click="chooseExpand(result)" :value="{{result.detailquestion | subStringFilter(0,30)}}">-->
         </datalist>
 
         <ul class="btn-list">
@@ -176,9 +183,6 @@
                 </li>
             </ul>
 
-
-<!--        放入上传的图片-->
-<!--        <div></div>-->
         <div id="searchResult">
             <div class="searchResultDiv">
                 <div th:replace="include/fore_/questionsBySearch::html"></div>
