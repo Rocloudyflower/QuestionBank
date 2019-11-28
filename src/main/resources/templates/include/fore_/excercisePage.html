@@ -37,13 +37,15 @@
                     },
                     chooseUnit:function (unit) {
 
+                        $("div[id^='answerItems']").empty()
+
                         if(!$("#unitID" + unit.id).hasClass("disabled")){
                             let uid = unit.id
                             let url = this.uri + "/" + uid + "/" + "questionsinfo"
                             axios.get(url).then(function (response) {
                                 vue.questions = response.data
                                 for(let q in vue.questions){
-                                    vue.getquestions(vue.questions[q])
+                                    vue.getquestions(vue.questions[q],q)
                                 }
                             })
 
@@ -53,14 +55,14 @@
                         $("#unitID" + unit.id).addClass("disabled")
 
                     },
-                    submitAnswer:function (question) {
+                    submitAnswer:function (question,index) {
                         let qid = question.id
                         let div = '<div style="background-color: #dca7a7;color: #a94442;height: 30px;width: 100px;text-align: center;line-height: 30px;">回答错误</div>'
                         let p1 = '<p>' + question.answer + '</p>'
                         let p2 = '<p>' + question.explanation + '</p>'
-                        $("#answerBtn" + qid).css("display","none")
+                        $("#answerBtn" + index).css("display","none")
                         //    判断选了哪个选项
-                        if($("input[name='answers"+ qid + "']:checked").val() === question.answer){
+                        if($("input[name='answers"+ index + "']:checked").val() === question.answer){
                             div = '<div style="background-color: #d0e9c6;color: #3e8f3e;height: 30px;width: 100px;text-align: center;line-height: 30px;">回答正确</div>'
                         }
                         else {
@@ -78,7 +80,7 @@
                                 }
                             })
                         }
-                        $("#answersDiv" + qid).append(p1).append(p2).append(div).show()
+                        $("#answersDiv" + index).append(p1).append(p2).append(div).show()
                     }
                 }
             })
