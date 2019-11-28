@@ -14,10 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 public class ForeRESTController {
@@ -73,7 +69,7 @@ public class ForeRESTController {
     public Object search( String keyword){
         if(null == keyword)
             keyword = "";
-        return questionService.search(keyword,0,20);
+        return questionService.search(keyword);
     }
 
 

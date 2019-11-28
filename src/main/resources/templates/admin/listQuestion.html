@@ -108,9 +108,9 @@
                             <tbody>
                             <tr v-for="bean in beans ">
                                 <td>{{bean.id}}</td>
-                                <td>{{bean.detailquestion| subStringFilter(0,20)}}</td>
-                                <td>{{bean.answer| subStringFilter(0,10)}}</td>
-                                <td>{{bean.explanation| subStringFilter(0,10)}}</td>
+                                <td>{{bean.detailquestion | subStringFilter(0,20)}}</td>
+                                <td>{{bean.answer | subStringFilter(0,10)}}</td>
+                                <td>{{bean.explanation | subStringFilter(0,10)}}</td>
                                 <td>{{bean.category.name}}</td>
                                 <td>
                                     <a :href="'admin_propertyValue_edit?qid=' + bean.id ">

@@ -42,6 +42,16 @@ public class MistakenController {
         return Result.success();
     }
 
+    @PostMapping("mistakens/list")
+    public Object addList(@RequestBody List<Mistaken> mistakens,HttpSession session){
+        User user = (User) session.getAttribute("user");
+        for (Mistaken m : mistakens){
+            m.setUser(user);
+            mistakenService.add(m);
+        }
+        return Result.success();
+    }
+
     @GetMapping("mistakens")
     public Object collection(HttpSession session){
         User user =(User) session.getAttribute("user");

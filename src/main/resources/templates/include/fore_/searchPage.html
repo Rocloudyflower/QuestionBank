@@ -145,12 +145,12 @@
                         axios.post(url).then(function(response) {
                             vue.results = response.data
                             console.log(vue.results)
+                            let selectDIV = $('#selectExpand')
+                            for(let r in vue.results){
+                                let option = "<option value='" + vue.results[r].detailquestion + "'>" + vue.results[r].detailquestion + "</option>"
+                                selectDIV.append(option)
+                            }
                         })
-                    },
-                    chooseExpand:function (result) {
-                        // $(" input[ name='keyword' ] ").val(result.detailquestion)
-                        vue.textSearch()
-                        vue.results = []
                     }
                 }
             })
@@ -163,11 +163,9 @@
         <img th:src="@{/img/logo.png}" alt="" src="../../../static/img/logo.png">
         <input class="searchInput" name="keyword" type="text" list="expand" v-on:input="expandSearch()">
         <datalist id="expand">
-            <select>
-<!--                <option v-for="result in results" @click="chooseExpand(result)" :value="{{result.id}}">{{result.detailquestion | subStringFilter(0,30)}}</option>-->
-                <!-- more -->
+            <select id="selectExpand">
+
             </select>
-            <!--            <option v-for="result in results" :key="result.id" @click="chooseExpand(result)" :value="{{result.detailquestion | subStringFilter(0,30)}}">-->
         </datalist>
 
         <ul class="btn-list">

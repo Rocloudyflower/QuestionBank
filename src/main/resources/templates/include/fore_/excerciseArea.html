@@ -9,12 +9,12 @@
 
             </div>
 <!--            提交题目 + 选择的答案-->
-            <button class="submitAnswer" @click="submitAnswer(q,index)" :id="'answerBtn'+index">提交</button>
+<!--            <button class="submitAnswer" @click="submitAnswer(q,index)" :id="'answerBtn'+index">提交</button>-->
             <div class="answerDiv" :id="'answersDiv'+index">
 
             </div>
         </div>
-
+        <button class="submitAnswer" @click="submitAllAnswer()" id="answerBtn">提交</button>
 <!--        <button class="submitAnswer" @click="submitAnswer(q,index)" :id="'answerBtn'+index">提交</button>-->
 <!--        简答计算题：不可选择 + 查看答案按钮-->
 <!--        <div v-if="q.category.id == 3 || q.category.id == 4">-->

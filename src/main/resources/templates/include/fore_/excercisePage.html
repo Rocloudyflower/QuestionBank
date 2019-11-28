@@ -4,7 +4,8 @@
             let data4Vue = {
                 uri:'excercises',
                 units:[],
-                questions:[]
+                questions:[],
+                unit:''
             }
             let vue = new Vue({
                 el:"#workingArea",
@@ -36,7 +37,7 @@
                         })
                     },
                     chooseUnit:function (unit) {
-
+                        vue.unit = unit
                         $("div[id^='answerItems']").empty()
 
                         if(!$("#unitID" + unit.id).hasClass("disabled")){
@@ -81,6 +82,56 @@
                             })
                         }
                         $("#answersDiv" + index).append(p1).append(p2).append(div).show()
+                    },
+                    addMistaken:function () {
+                        // 加入错题本
+                        let url_ = "mistakens/list"
+                        axios.post(url_,wrongQuestion).then(function (response) {
+                            console.log(response.data)
+                        })
+                    },
+                    submitAllAnswer : function () {
+                        let correctNum = 0
+                        let wrongQuestion = []
+                        for(let index in vue.questions){
+                        //    判断答案
+                            let question = vue.questions[index]
+                            let qid = question.id
+                            let div = '<div style="background-color: #dca7a7;color: #a94442;height: 30px;width: 100px;text-align: center;line-height: 30px;">回答错误</div>'
+                            let p1 = '<p>' + question.answer + '</p>'
+                            let p2 = '<p>' + question.explanation + '</p>'
+                            $("#answerBtn" + index).css("display","none")
+                            //    判断选了哪个选项
+                            if($("input[name='answers"+ index + "']:checked").val() === question.answer){
+                                div = '<div style="background-color: #d0e9c6;color: #3e8f3e;height: 30px;width: 100px;text-align: center;line-height: 30px;">回答正确</div>'
+                                correctNum += 1
+                            }
+                            else {
+                                // 加入错题本
+                                wrongQuestion.push(question)
+
+
+                            }
+                            $("#answersDiv" + index).append(p1).append(p2).append(div).show()
+                        }
+                        // 提交刷题结果到后端
+                        // 先判断登录情况
+                        let url = "forecheckLogin"
+                        axios.get(url).then(function (response) {
+                            if (0 === response.data.code) {
+                                let url = 'exercises/result'
+                                let rankinglist = { 'score':correctNum*2 , 'unit' : vue.unit }
+                                axios.post(url,rankinglist).then(response => {
+                                    if(confirm("是否将错题加入错题本？")){
+                                        addMistaken()
+                                    }
+                                })
+
+                            } else {
+                                $("#loginModal").modal('show')
+                            }
+                        })
+
                     }
                 }
             })

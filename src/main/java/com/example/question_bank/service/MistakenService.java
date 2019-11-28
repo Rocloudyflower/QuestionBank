@@ -33,5 +33,4 @@ public class MistakenService {
         return mistakenDAO.findByQuestionAndUser(question,user);
     }
 
-
 }

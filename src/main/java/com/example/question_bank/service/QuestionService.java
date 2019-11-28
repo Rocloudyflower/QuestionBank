@@ -5,9 +5,12 @@ import com.example.question_bank.dao.QuestionDAO;
 import com.example.question_bank.es.QuestionESDAO;
 import com.example.question_bank.pojo.*;
 import com.example.question_bank.util.Page4Navigator;
+import org.elasticsearch.action.search.SearchRequestBuilder;
+import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
 import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;
+import org.elasticsearch.search.sort.SortBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -89,20 +92,27 @@ public class QuestionService {
         return exercices;
     }
 
-    public List<Question> search(String keyword, int start, int size) {
+    public List<Question> search(String keyword) {
 //        initDatabase2ES();
         FunctionScoreQueryBuilder functionScoreQueryBuilder = QueryBuilders.functionScoreQuery()
                 .add(QueryBuilders.matchQuery("detailquestion", keyword),
-                        ScoreFunctionBuilders.weightFactorFunction(100))
+                        ScoreFunctionBuilders.weightFactorFunction(1000))
                 .add(QueryBuilders.matchQuery("explanation", keyword),
-                        ScoreFunctionBuilders.weightFactorFunction(50))
-                .scoreMode("sum")
-                .setMinScore(100);
+                        ScoreFunctionBuilders.weightFactorFunction(100));
 
         Pageable pageable = new PageRequest(0, 10);
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withQuery(functionScoreQueryBuilder)
                 .withPageable(pageable)
-                .withQuery(functionScoreQueryBuilder).build();
+                .withSort(SortBuilders.scoreSort()).build();
+
+//        SearchRequestBuilder searchRequestBuilder = new SearchRequestBuilder();
+//        searchRequestBuilder.setSearchType(SearchType.DFS_QUERY_THEN_FETCH);
+//        //分页
+//        searchRequestBuilder.setFrom(0).setSize(10);
+//        //explain为true表示根据数据相关度排序，和关键字匹配最高的排在前面
+//        searchRequestBuilder.setExplain(true);
+//        searchRequestBuilder.setQuery(functionScoreQueryBuilder);
         Page<Question> page = questionESDAO.search(searchQuery);
         return page.getContent();
     }
