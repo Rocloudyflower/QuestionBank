@@ -5,7 +5,8 @@
                 uri:'excercises',
                 units:[],
                 questions:[],
-                unit:''
+                unit:'',
+                wrongQuestion:[]
             }
             let vue = new Vue({
                 el:"#workingArea",
@@ -39,6 +40,7 @@
                     chooseUnit:function (unit) {
                         vue.unit = unit
                         $("div[id^='answerItems']").empty()
+                        $("div[id^='answersDiv']").empty()
 
                         if(!$("#unitID" + unit.id).hasClass("disabled")){
                             let uid = unit.id
@@ -55,46 +57,48 @@
                         $("div[id^='unitID']").removeClass("disabled")
                         $("#unitID" + unit.id).addClass("disabled")
 
+                        $('#answerBtn').css('display','block')
                     },
-                    submitAnswer:function (question,index) {
-                        let qid = question.id
-                        let div = '<div style="background-color: #dca7a7;color: #a94442;height: 30px;width: 100px;text-align: center;line-height: 30px;">回答错误</div>'
-                        let p1 = '<p>' + question.answer + '</p>'
-                        let p2 = '<p>' + question.explanation + '</p>'
-                        $("#answerBtn" + index).css("display","none")
-                        //    判断选了哪个选项
-                        if($("input[name='answers"+ index + "']:checked").val() === question.answer){
-                            div = '<div style="background-color: #d0e9c6;color: #3e8f3e;height: 30px;width: 100px;text-align: center;line-height: 30px;">回答正确</div>'
-                        }
-                        else {
-                            // 先check有没有登录
-                            let url = "forecheckLogin"
-                            axios.get(url).then(function (response) {
-                                if (0 === response.data.code) {
-                                    // 加入错题本
-                                    let url_ = "mistakens?qid=" + qid
-                                    axios.post(url_).then(function (response) {
-                                        console.log(response.data)
-                                    })
-                                } else {
-                                    $("#loginModal").modal('show')
-                                }
-                            })
-                        }
-                        $("#answersDiv" + index).append(p1).append(p2).append(div).show()
-                    },
-                    addMistaken:function () {
+                    // submitAnswer:function (question,index) {
+                    //     let qid = question.id
+                    //     let div = '<div style="background-color: #dca7a7;color: #a94442;height: 30px;width: 100px;text-align: center;line-height: 30px;">回答错误</div>'
+                    //     let p1 = '<p>' + question.answer + '</p>'
+                    //     let p2 = '<p>' + question.explanation + '</p>'
+                    //     $("#answerBtn" + index).css("display","none")
+                    //     //    判断选了哪个选项
+                    //     if($("input[name='answers"+ index + "']:checked").val() === question.answer){
+                    //         div = '<div style="background-color: #d0e9c6;color: #3e8f3e;height: 30px;width: 100px;text-align: center;line-height: 30px;">回答正确</div>'
+                    //     }
+                    //     else {
+                    //         // 先check有没有登录
+                    //         let url = "forecheckLogin"
+                    //         axios.get(url).then(function (response) {
+                    //             if (0 === response.data.code) {
+                    //                 // 加入错题本
+                    //                 let url_ = "mistakens?qid=" + qid
+                    //                 axios.post(url_).then(function (response) {
+                    //                     console.log(response.data)
+                    //                 })
+                    //             } else {
+                    //                 $("#loginModal").modal('show')
+                    //             }
+                    //         })
+                    //     }
+                    //     $("#answersDiv" + index).append(p1).append(p2).append(div).show()
+                    // },
+                    addMistaken: function () {
                         // 加入错题本
                         let url_ = "mistakens/list"
-                        axios.post(url_,wrongQuestion).then(function (response) {
+                        // let stringW = JSON.stringify(vue.wrongQuestion)
+                        // console.log(stringW)
+                        axios.post(url_,vue.wrongQuestion).then(function (response) {
                             console.log(response.data)
                         })
                     },
                     submitAllAnswer : function () {
                         let correctNum = 0
-                        let wrongQuestion = []
                         for(let index in vue.questions){
-                        //    判断答案
+                            //    判断答案
                             let question = vue.questions[index]
                             let qid = question.id
                             let div = '<div style="background-color: #dca7a7;color: #a94442;height: 30px;width: 100px;text-align: center;line-height: 30px;">回答错误</div>'
@@ -108,9 +112,7 @@
                             }
                             else {
                                 // 加入错题本
-                                wrongQuestion.push(question)
-
-
+                                vue.wrongQuestion.push(question.id)
                             }
                             $("#answersDiv" + index).append(p1).append(p2).append(div).show()
                         }
@@ -123,10 +125,9 @@
                                 let rankinglist = { 'score':correctNum*2 , 'unit' : vue.unit }
                                 axios.post(url,rankinglist).then(response => {
                                     if(confirm("是否将错题加入错题本？")){
-                                        addMistaken()
+                                        vue.addMistaken()
                                     }
                                 })
-
                             } else {
                                 $("#loginModal").modal('show')
                             }
