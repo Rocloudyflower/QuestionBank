@@ -28,7 +28,8 @@
                     },
                     showQuestionItem:function (question) {
                         let qid = question.id
-                        if($("#historyItemsTR" + qid).hasClass('firsttime')){
+                        let historyItem = $("#historyItemsTR" + qid)
+                        if(historyItem.hasClass('firsttime')){
                             let url = "questions/"+ qid +"/propertyValues"
                             let beans = {}
                             axios.get(url).then(function(response) {
@@ -40,8 +41,7 @@
                                 }
                             })
                         }
-                        $("#historyItemsTR" + qid).removeClass('firsttime')
-                        $("#historyItemsTR" + qid).toggle()
+                        historyItem.removeClass('firsttime').toggle()
                     },
                     deleteQuestionItem:function (question) {
                         let url = this.uri + "/" + question.id

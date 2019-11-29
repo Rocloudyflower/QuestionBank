@@ -19,6 +19,7 @@
                         let url = 'units' // 这个是分页返回的..需要重新写方法
                         axios.get(url).then(function (response) {
                             vue.units = response.data.content
+                            vue.chooseUnit(vue.units[0])
                         })
                     },
                     chooseUnit:function (unit) {
@@ -30,10 +31,7 @@
                             let uid = unit.id
                             let url = this.uri + "/" + uid
                             axios.get(url).then(function (response) {
-                                vue.questions = response.data
-                                for(let q in vue.questions){
-                                    vue.getquestions(vue.questions[q],q)
-                                }
+                                vue.rankinglist = response.data
                             })
 
                         }
@@ -70,11 +68,11 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="top-one">
-                        <td>1</td>
-                        <td>user1</td>
-                        <td>exercisetimes1</td>
-                        <td>score1</td>
+                    <tr v-for="(r,index) in rankinglist">
+                        <td>{{index+1}}</td>
+                        <td>{{r.user.name}}</td>
+                        <td>{{r.times}}</td>
+                        <td>{{r.score}}</td>
                     </tr>
                     </tbody>
                 </table>

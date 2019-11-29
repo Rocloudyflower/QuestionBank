@@ -85,11 +85,11 @@ public class WordDictionary {
     }
 
 
-    public void loadDict() {
+    private void loadDict() {
         _dict = new DictSegment((char) 0);
         InputStream is = this.getClass().getResourceAsStream(MAIN_DICT);
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
 
             long s = System.currentTimeMillis();
             while (br.ready()) {

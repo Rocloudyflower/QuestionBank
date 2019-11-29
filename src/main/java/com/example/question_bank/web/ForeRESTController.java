@@ -3,6 +3,7 @@ package com.example.question_bank.web;
 import com.example.question_bank.pojo.*;
 import com.example.question_bank.service.*;
 import com.example.question_bank.util.Result;
+import com.huaban.analysis.jieba.JiebaSegmenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
@@ -68,19 +69,19 @@ public class ForeRESTController {
             keyword = "";
 
 //        关键热词+1
-        com.huaban.analysis.jieba.JiebaSegmenter segmenter = new com.huaban.analysis.jieba.JiebaSegmenter();
-        List<String> words = segmenter.sentenceProcess(keyword);
+//        JiebaSegmenter segmenter = new JiebaSegmenter();
+//        List<String> words = segmenter.sentenceProcess(keyword);
 
 //        遍历热词库，若该热词存在，数据库中searchtimes字段+1
-        for (String word : words){
-            if(hotWordService.exitByHotWord(word)){
-                HotWord hotWord = hotWordService.get(word);
-                int searchtimes = hotWord.getSearchtimes() + 1;
-                hotWord.setSearchtimes(searchtimes);
-                hotWordService.save(hotWord);
-            }
-        }
-        return questionService.search(keyword);
+//        for (String word : words){
+//            if(hotWordService.exitByHotWord(word)){
+//                HotWord hotWord = hotWordService.get(word);
+//                int searchtimes = hotWord.getSearchtimes() + 1;
+//                hotWord.setSearchtimes(searchtimes);
+//                hotWordService.save(hotWord);
+//            }
+//        }
+        return questionService.searchQuestionDetail(keyword);
     }
 
 }

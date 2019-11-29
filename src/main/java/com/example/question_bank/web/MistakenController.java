@@ -1,15 +1,11 @@
 package com.example.question_bank.web;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.example.question_bank.pojo.Mistaken;
 import com.example.question_bank.pojo.Question;
 import com.example.question_bank.pojo.User;
 import com.example.question_bank.service.MistakenService;
 import com.example.question_bank.service.QuestionService;
 import com.example.question_bank.util.Result;
-import jdk.nashorn.internal.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,10 +45,9 @@ public class MistakenController {
     @PostMapping("mistakens/list")
     public Object addList(@RequestBody Integer[] wrongQuestion,HttpSession session){
         User user = (User) session.getAttribute("user");
-
-        for (int i = 0; i< wrongQuestion.length; i++){
+        for (Integer integer : wrongQuestion) {
             Mistaken m = new Mistaken();
-            Question question = questionService.get(wrongQuestion[i]);
+            Question question = questionService.get(integer);
             m.setQuestion(question);
             m.setUser(user);
             mistakenService.add(m);

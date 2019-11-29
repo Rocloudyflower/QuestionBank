@@ -12,6 +12,6 @@ import java.util.List;
 public interface QuestionDAO extends JpaRepository<Question, Integer> {
     Page<Question> findByUnit(Unit unit, Pageable pageable);
     List<Question> findByUnitOrderById(Unit unit);
+    Page<Question> findByDetailquestionLike(String keyword,Pageable pageable);
     List<Question> findByDetailquestionLike(String keyword);
-//    List<Question> findBy
 }

@@ -14,44 +14,29 @@ public class RankingList {
     int id;
 
     @ManyToOne
-    @JoinColumn(name = "uid")
+    @JoinColumn(name = "useremail")
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "unitid")
     private Unit unit;
 
-    private  int score;
+    private int score;
+    private int times;
 
-    public int getId() {
-        return id;
-    }
+    public int getId() {return this.id;}
+    public void setId(int id) {this.id = id;}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    public User getUser() {return this.user;}
+    public void setUser(User user) {this.user = user;}
 
-    public User getUser() {
-        return user;
-    }
+    public Unit getUnit() {return this.unit;}
+    public void setUnit(Unit unit) {this.unit = unit;}
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+    public int getScore() {return this.score;}
+    public void setScore(int score) {this.score = score;}
 
-    public Unit getUnit() {
-        return unit;
-    }
+    public int getTimes() {return this.times;}
+    public void setTimes(int times) {this.times = times;}
 
-    public void setUnit(Unit unit) {
-        this.unit = unit;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
 }
