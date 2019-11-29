@@ -1,19 +1,14 @@
 package com.example.question_bank.web;
 
-import com.example.question_bank.pojo.Collection;
-import com.example.question_bank.pojo.PropertyValue;
-import com.example.question_bank.pojo.Question;
-import com.example.question_bank.pojo.User;
-import com.example.question_bank.service.CollectionService;
-import com.example.question_bank.service.PropertyValueService;
-import com.example.question_bank.service.QuestionService;
-import com.example.question_bank.service.UserService;
+import com.example.question_bank.pojo.*;
+import com.example.question_bank.service.*;
 import com.example.question_bank.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RestController
 public class ForeRESTController {
@@ -25,6 +20,8 @@ public class ForeRESTController {
     PropertyValueService propertyValueService;
     @Autowired
     CollectionService collectionService;
+    @Autowired
+    HotWordService hotWordService;
 
     @PostMapping("forelogin")
     public Object login(@RequestBody User userParam, HttpSession session) {
@@ -66,12 +63,24 @@ public class ForeRESTController {
     }
 
     @PostMapping("foresearch")
-    public Object search( String keyword){
+    public Object search(String keyword){
         if(null == keyword)
             keyword = "";
+
+//        关键热词+1
+        com.huaban.analysis.jieba.JiebaSegmenter segmenter = new com.huaban.analysis.jieba.JiebaSegmenter();
+        List<String> words = segmenter.sentenceProcess(keyword);
+
+//        遍历热词库，若该热词存在，数据库中searchtimes字段+1
+        for (String word : words){
+            if(hotWordService.exitByHotWord(word)){
+                HotWord hotWord = hotWordService.get(word);
+                int searchtimes = hotWord.getSearchtimes() + 1;
+                hotWord.setSearchtimes(searchtimes);
+                hotWordService.save(hotWord);
+            }
+        }
         return questionService.search(keyword);
     }
-
-
 
 }

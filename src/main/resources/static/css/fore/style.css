@@ -515,3 +515,46 @@ input[name="rate"]:hover~input[name='rate']::after {
     margin:20px auto;
 }
 
+/* rankinglist.html */
+#rankingList .list {margin:0 10%;background:rgba(255,255,255,0.5);color:#000;font-size:15px;}
+#rankingList th{
+    text-align: center;
+    font-size:16px;
+    background-image:-webkit-linear-gradient(50deg, #C0EF19 20%, #F82123 60%,#E0A62E 20%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;}
+
+.rankinglist-nav{
+    margin: auto;
+    width: 70%;
+}
+.rankinglist-nav h3{
+    margin: 20px auto;
+    text-align: center;
+    font-size:28px;
+    background-image:-webkit-linear-gradient(50deg, #C0EF19 20%, #F82123 60%,#E0A62E 20%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.ranking-list{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content:space-around;
+    font-size:16px;
+}
+.ranking-list li{
+    display:inline-block;
+    height: 40px;
+    line-height: 20px;
+    padding:10px 18px;
+    color: #E0A62E;
+    background-color:#fff;
+    border-radius: 20px;
+    border: 1px solid #E0A62E;
+    transition: .3s;
+    cursor: pointer;
+}
+.ranking-list li:hover{
+    background-color: #E0A62E;
+    color:#fff;
+}

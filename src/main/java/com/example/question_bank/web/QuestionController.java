@@ -4,6 +4,7 @@ import com.baidu.aip.ocr.AipOcr;
 import com.example.question_bank.pojo.Question;
 import com.example.question_bank.pojo.SearchRecord;
 import com.example.question_bank.pojo.User;
+import com.example.question_bank.service.HotWordService;
 import com.example.question_bank.service.PropertyValueService;
 import com.example.question_bank.service.QuestionService;
 import com.example.question_bank.service.SearchRecordService;
@@ -42,6 +43,8 @@ public class QuestionController {
     PropertyValueService propertyValueService;
     @Autowired
     SearchRecordService searchRecordService;
+    @Autowired
+    HotWordService hotWordService;
 
     //设置APPID/AK/SK
     public static final String APP_ID = "17712908";
@@ -173,15 +176,10 @@ public class QuestionController {
         return Result.success(finalScore);
     }
 
-//    关键热词
-//    @GetMapping("questions/hotsearched")
-//    public List<Object> hotsearched() {
-//
-//    }
-
 //    搜索扩展
     @GetMapping("questions/expand")
     public List<Question> expand(String keyString){
+//        搜索扩展
         List<Question> questions = questionService.searchQuestionDetail(keyString);
         int num = Math.min(questions.size(), 10);
         List<Question> result = new ArrayList<>();

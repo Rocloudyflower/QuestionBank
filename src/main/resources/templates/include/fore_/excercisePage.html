@@ -141,7 +141,9 @@
 
     <div class="unit-choices">
         <h3>请选择单元</h3>
+
         <ul class="units-list">
+            <li><a href="rankinglist" target="_blank">👑 查看排行榜</a></li>
             <li v-for="u in units" @click="chooseUnit(u)" :id="'unitID'+u.id">{{u.name}}</li>
         </ul>
     </div>

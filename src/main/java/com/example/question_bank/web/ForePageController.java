@@ -56,4 +56,9 @@ public class ForePageController {
         return "fore/history";
     }
 
+    @GetMapping(value = "/rankinglist")
+    public String rankinglist(){
+        return "fore/rankinglist";
+    }
+
 }
