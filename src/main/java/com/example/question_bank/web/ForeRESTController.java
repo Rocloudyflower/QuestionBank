@@ -56,7 +56,7 @@ public class ForeRESTController {
     }
 
     @GetMapping("forecheckLogin")
-    public Object checkLogin( HttpSession session) {
+    public Object checkLogin(HttpSession session) {
         User user =(User)  session.getAttribute("user");
         if(null != user)
             return Result.success();
@@ -64,10 +64,11 @@ public class ForeRESTController {
     }
 
     @PostMapping("foresearch")
-    public Object search(String keyword){
+    public List<Question> search(@RequestParam(name = "keyword") String keyword){
         if(null == keyword)
             keyword = "";
 
+        System.out.println("keyword: " + keyword);
 //        关键热词+1
 //        JiebaSegmenter segmenter = new JiebaSegmenter();
 //        List<String> words = segmenter.sentenceProcess(keyword);
@@ -81,6 +82,7 @@ public class ForeRESTController {
 //                hotWordService.save(hotWord);
 //            }
 //        }
+        System.out.println(questionService.searchQuestionDetail(keyword));
         return questionService.searchQuestionDetail(keyword);
     }
 

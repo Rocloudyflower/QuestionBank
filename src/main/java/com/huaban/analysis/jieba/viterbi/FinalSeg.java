@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -76,7 +77,7 @@ public class FinalSeg {
 
         InputStream is = this.getClass().getResourceAsStream(PROB_EMIT);
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             emit = new HashMap<Character, Map<Character, Double>>();
             Map<Character, Double> values = null;
             while (br.ready()) {
@@ -171,6 +172,7 @@ public class FinalSeg {
                         candidate.key = y0;
                     }
                 }
+                assert candidate != null;
                 vv.put(y, candidate.freq);
                 newPath.put(y, new Node(y, path.get(candidate.key)));
             }

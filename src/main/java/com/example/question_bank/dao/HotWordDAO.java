@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface HotWordDAO extends JpaRepository<HotWord,String> {
-    List<HotWord> findByOrderBySearchtimes(PageRequest pageRequest);
+    List<HotWord> findAllByOrderBySearchtimesDesc();
 }

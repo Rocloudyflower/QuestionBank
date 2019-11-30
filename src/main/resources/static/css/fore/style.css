@@ -558,3 +558,80 @@ input[name="rate"]:hover~input[name='rate']::after {
     background-color: #E0A62E;
     color:#fff;
 }
+
+/* hotwordDIV */
+.hotwordDIV{
+    position: fixed;
+    top: 100px;
+    left: 20px;
+    width: 400px;
+    height: 400px;
+}
+
+.cube{
+    position:relative;
+    margin:100px auto;
+    width: 120px;
+    height: 120px;
+    transform-style:preserve-3d;
+    animation:roll 18s linear infinite;
+    color:rgb(235,211,180);
+}
+@keyframes roll{
+    from{
+        transform:rotateX(0deg) rotateY(0deg);
+    }
+    to{
+        transform:rotateX(-360deg) rotateY(-720deg);
+    }
+}
+.cube .small{
+    position:absolute;
+    width: 120px;
+    height: 120px;
+    font-size:22px;
+    text-align:center;
+    line-height:120px;
+    perspective:2000px;
+    border:2px solid rgb(235,211,180);
+    transition:.6s;
+}
+.cube .small:nth-child(1){
+    transform:rotateX(90deg) translateZ(120px);
+}
+.cube .small:nth-child(2){
+    transform:rotateX(-90deg) translateZ(120px);
+}
+.cube .small:nth-child(3){
+    transform:rotateY(-90deg) translateZ(120px);
+}
+.cube .small:nth-child(4){
+    transform:rotateY(90deg) translateZ(120px);
+}
+.cube .small:nth-child(5){
+    transform:rotateY(180deg) translateZ(120px);
+}
+.cube .small:nth-child(6){
+    transform:rotateY(0deg) translateZ(120px);
+}
+.cube:hover{
+    animation:roll 28s linear infinite;
+}
+.cube:hover .small:nth-child(1){
+    transform:rotateX(90deg) translateZ(190px);
+}
+.cube:hover .small:nth-child(2){
+    transform:rotateX(-90deg) translateZ(190px);
+}
+.cube:hover .small:nth-child(3){
+    transform:rotateY(-90deg) translateZ(190px);
+}
+.cube:hover .small:nth-child(4){
+    transform:rotateY(90deg) translateZ(190px);
+}
+.cube:hover .small:nth-child(5){
+    transform:rotateY(180deg) translateZ(190px);
+}
+.cube:hover .small:nth-child(6){
+    transform:rotateY(0deg) translateZ(190px);
+}

@@ -7,10 +7,10 @@
                 uri:"foresearch",
                 questions:[],
                 file:null,
-                // pagination:{},
                 user: {email: '',password: ''},
                 searchFile: '',
-                results:[]
+                results:[],
+                hotwords:[]
             }
 
             // VueModel
@@ -18,9 +18,15 @@
                 el:"#workingArea",
                 data:data4Vue,
                 mounted:function(){
-
+                    this.gethotwords()
                 },
                 methods:{
+                    gethotwords:function(){
+                        let url = "hotwords"
+                        axios.get(url).then(response => {
+                            vue.hotwords = response.data
+                        })
+                    },
                     textSearch:function(){
 
                         $("div[id^='questionItemsTR']").addClass('firsttime').hide()
@@ -50,9 +56,9 @@
 
                         axios.post(url,formData).then(function(response){
                             let keyword_ = response.data
+                            $('.searchInput').val(keyword_)
                             let url_ =  "foresearch?keyword=" + keyword_
                             axios.post(url_).then(function(response) {
-                                // vue.pagination = response.data
                                 vue.questions = response.data
                                 if(0 === vue.questions.length){
                                     window.open("https://www.baidu.com/s?wd=" + keyword_)
@@ -159,8 +165,16 @@
 
     <div th:replace="include/fore_/modal4login::html"></div>
 
+    <!--        显示热词-->
+    <div class="hotwordDIV">
+        <div class="cube">
+            <div class="small" v-for="h in hotwords">{{h.hotword}}</div>
+        </div>
+    </div>
+
     <div class="searchArea">
         <img th:src="@{/img/logo.png}" alt="" src="../../../static/img/logo.png">
+
         <input class="searchInput" name="keyword" type="text" list="expand" v-on:input="expandSearch()">
         <datalist id="expand">
             <select id="selectExpand">
@@ -181,10 +195,6 @@
                 </li>
             </ul>
 
-<!--        显示热词-->
-        <div class="hotwordDIV">
-
-        </div>
 
         <div id="searchResult">
             <div class="searchResultDiv">

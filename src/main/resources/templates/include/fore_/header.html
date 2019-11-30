@@ -12,8 +12,8 @@
     <script>
         function getUrlParms(para){
             let search = location.search //页面URL的查询部分字符串
-            let arrPara = new Array() //参数数组。数组单项为包含参数名和参数值的字符串，如“para=value”
-            let arrVal = new Array() //参数值数组。用于存储查找到的参数值
+            let arrPara = [] //参数数组。数组单项为包含参数名和参数值的字符串，如“para=value”
+            let arrVal = [] //参数值数组。用于存储查找到的参数值
 
             if(search !== ""){
                 let index = 0

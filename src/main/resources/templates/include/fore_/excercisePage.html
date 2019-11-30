@@ -6,7 +6,8 @@
                 units:[],
                 questions:[],
                 unit:'',
-                wrongQuestion:[]
+                wrongQuestion:[],
+                user:{ id:0,name:'',email:''}
             }
             let vue = new Vue({
                 el:"#workingArea",
@@ -139,6 +140,8 @@
         })
     </script>
 
+    <div th:replace="include/fore_/modal4login::html"></div>
+
     <div class="unit-choices">
         <h3>请选择单元</h3>
 
@@ -153,7 +156,5 @@
             <div th:replace="include/fore_/excerciseArea::html"></div>
         </div>
     </div>
-
-
 
 </div>

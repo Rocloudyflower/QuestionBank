@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -16,9 +17,17 @@ public class HotWordController {
 
     @GetMapping("hotwords")
     public List<HotWord> sortBySearchtimes(){
-        int hotwordNum = 6;
-        PageRequest pageRequest = new PageRequest(0,hotwordNum);
-        return hotWordService.sortBySearchtimes(pageRequest);
+        int hotwordNum = 0;
+        List<HotWord> hotWords = hotWordService.sortBySearchtimes();
+        List<HotWord> hotWordList = new ArrayList<>();
+        for(HotWord hotWord : hotWords){
+            if(hotwordNum > 5){
+                break;
+            }
+            hotWordList.add(hotWord);
+            hotwordNum = hotwordNum + 1;
+        }
+        return hotWordList;
     }
 
 }
