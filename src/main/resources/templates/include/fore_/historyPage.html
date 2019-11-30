@@ -26,9 +26,9 @@
                     jumpByNumber: function(start){
                         jumpByNumber(start,vue)
                     },
-                    showQuestionItem:function (question) {
+                    showQuestionItem:function (question,index) {
                         let qid = question.id
-                        let historyItem = $("#historyItemsTR" + qid)
+                        let historyItem = $("#historyItemsTR" + index)
                         if(historyItem.hasClass('firsttime')){
                             let url = "questions/"+ qid +"/propertyValues"
                             let beans = {}
@@ -37,7 +37,7 @@
                                 console.log(beans)
                                 for (let i = 0; i < beans.length ; i++){
                                     var p = "<p>" + beans[i].property.name + " | " + beans[i].value + "</p>"
-                                    $("#historyItemsTRchoice" + qid).append(p)
+                                    $("#historyItemsTRchoice" + index).append(p)
                                 }
                             })
                         }

@@ -1,6 +1,6 @@
 <div th:fragment="html" xmlns:th="http://www.w3.org/1999/xhtml">
     <div class="historyQuestions">
-        <div class="questionBlock" v-for="q in questions">
+        <div class="questionBlock" v-for="(q,index) in questions">
             <!--        搞个分页 + 点击进入题目详情 -->
             <p class="DetailQuestion">
                 {{q.detailquestion}}
@@ -8,11 +8,11 @@
             <span class="CategoryAndUnit">
                 {{q.unit.name}} | {{q.category.name}}
             </span>
-            <button @click="showQuestionItem(q)">
+            <button @click="showQuestionItem(q,index)">
                 查看详情
             </button>
-            <div class="questionItemTR firsttime" :id="'historyItemsTR'+q.id" style=" display:none ">
-                <p :id="'historyItemsTRchoice'+q.id"></p>
+            <div class="questionItemTR firsttime" :id="'historyItemsTR'+index" style=" display:none ">
+                <p :id="'historyItemsTRchoice'+index"></p>
                 <p>{{q.answer}}</p>
                 <p>{{q.explanation}}</p>
             </div>
