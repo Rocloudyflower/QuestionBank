@@ -65,8 +65,9 @@
 }
 
 /* login.html */
-.loginErrorMessageDiv{
+.errorMessage{
     display: none;
+
 }
 
 #login-form input{

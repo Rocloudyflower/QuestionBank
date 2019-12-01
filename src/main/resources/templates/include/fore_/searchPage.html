@@ -152,6 +152,7 @@
                             vue.results = response.data
                             console.log(vue.results)
                             let selectDIV = $('#selectExpand')
+                            selectDIV.empty()
                             for(let r in vue.results){
                                 let option = "<option value='" + vue.results[r].detailquestion + "'>" + vue.results[r].detailquestion + "</option>"
                                 selectDIV.append(option)

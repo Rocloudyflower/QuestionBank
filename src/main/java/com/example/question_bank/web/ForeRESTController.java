@@ -1,15 +1,25 @@
 package com.example.question_bank.web;
 
+import com.alibaba.fastjson.JSON;
 import com.example.question_bank.pojo.*;
 import com.example.question_bank.service.*;
+import com.example.question_bank.util.Jieba;
 import com.example.question_bank.util.Result;
-import com.huaban.analysis.jieba.JiebaSegmenter;
+import org.apache.shiro.crypto.hash.Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+
+import static com.example.question_bank.util.Jieba.splitWords;
+
 
 @RestController
 public class ForeRESTController {
@@ -64,26 +74,51 @@ public class ForeRESTController {
     }
 
     @PostMapping("foresearch")
-    public List<Question> search(@RequestParam(name = "keyword") String keyword){
-        if(null == keyword)
-            keyword = "";
+    public List<Question> search(@RequestParam(name = "keyword") String keyword) throws IOException {
+        if(null == keyword){
+            return new ArrayList<>();
+        }
+        List<Question> questions_ = questionService.searchQuestionDetail(keyword);
 
-        System.out.println("keyword: " + keyword);
-//        关键热词+1
-//        JiebaSegmenter segmenter = new JiebaSegmenter();
-//        List<String> words = segmenter.sentenceProcess(keyword);
+        List<String> words = splitWords(keyword);
 
 //        遍历热词库，若该热词存在，数据库中searchtimes字段+1
-//        for (String word : words){
-//            if(hotWordService.exitByHotWord(word)){
-//                HotWord hotWord = hotWordService.get(word);
-//                int searchtimes = hotWord.getSearchtimes() + 1;
-//                hotWord.setSearchtimes(searchtimes);
-//                hotWordService.save(hotWord);
-//            }
-//        }
-        System.out.println(questionService.searchQuestionDetail(keyword));
-        return questionService.searchQuestionDetail(keyword);
+        for (String word : words){
+            if(hotWordService.exitByHotWord(word)){
+                HotWord hotWord = hotWordService.get(word);
+                int searchtimes = hotWord.getSearchtimes() + 1;
+                hotWord.setSearchtimes(searchtimes);
+                hotWordService.save(hotWord);
+            }else {
+                words.remove(word);
+            }
+        }
+
+//        遍历题库，计算每道题含有多少个关键词
+        List<Question> questions = questionService.getAll();
+        for (Question question : questions){
+            int count = 0;
+            for (String word : words){
+                if (question.getDetailquestion().contains(word)){
+                    count++;
+                }
+            }
+            question.setContainHotwords(count);
+            System.out.println(question.getDetailquestion()+"\nquestion Cotains hotwords:" + count);
+        }
+
+        questions.sort(Question::compareTo);
+
+        for (Question question : questions){
+            System.out.println(questions_.size() + " " + questions_.contains(question));
+            if (questions_.size() >= 10) break;
+            if (!questions_.contains(question)){
+
+                questions_.add(question);
+
+            }
+        }
+        return questions_;
     }
 
 }

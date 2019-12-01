@@ -7,15 +7,50 @@
                 questions:[],
                 unit:'',
                 wrongQuestion:[],
-                user:{ id:0,name:'',email:''}
+                user:{email:"",password:""}
             }
             let vue = new Vue({
                 el:"#workingArea",
                 data:data4Vue,
                 mounted:function () {
+                    this.checklogin()
                     this.list()
                 },
                 methods:{
+                    checklogin:function(){
+                        // 先判断登录情况
+                        let url = "forecheckLogin"
+                        axios.get(url).then(function (response) {
+                            if (0 === response.data.code) {
+
+                            } else {
+                                $("#loginModal").modal('show')
+                                $(".loginSubmitButton").click(function(){
+                                    let url =  "forelogin"
+                                    if(0 === vue.user.email.length){
+                                        $("span.errorMessage").html("请输入登录邮箱")
+                                        $("div.loginErrorMessageDiv").css("display","block")
+                                        return
+                                    }
+                                    if(0 === vue.user.password.length){
+                                        $("span.errorMessage").html("请输入密码")
+                                        $("div.loginErrorMessageDiv").css("display","block")
+                                        return
+                                    }
+                                    axios.post(url,vue.user).then(function(response) {
+                                        let result = response.data
+                                        if(0 === result.code){
+                                            location.href="exercise"
+                                        }
+                                        else{
+                                            $("span.errorMessage").html(result.message)
+                                            $("div.loginErrorMessageDiv").css("visibility","visible")
+                                        }
+                                    })
+                                })
+                            }
+                        })
+                    },
                     list:function () {
                         let url = 'units' // 这个是分页返回的..需要重新写方法
                         axios.get(url).then(function (response) {
@@ -42,8 +77,8 @@
                         vue.unit = unit
                         $("div[id^='answerItems']").empty()
                         $("div[id^='answersDiv']").empty()
-
-                        if(!$("#unitID" + unit.id).hasClass("disabled")){
+                        let unitID = $("#unitID" + unit.id)
+                        if(!unitID.hasClass("disabled")){
                             let uid = unit.id
                             let url = this.uri + "/" + uid + "/" + "questionsinfo"
                             axios.get(url).then(function (response) {
@@ -56,7 +91,7 @@
                         }
 
                         $("div[id^='unitID']").removeClass("disabled")
-                        $("#unitID" + unit.id).addClass("disabled")
+                        unitID.addClass("disabled")
 
                         $('#answerBtn').css('display','block')
                     },
@@ -118,22 +153,13 @@
                             $("#answersDiv" + index).append(p1).append(p2).append(div).show()
                         }
                         // 提交刷题结果到后端
-                        // 先判断登录情况
-                        let url = "forecheckLogin"
-                        axios.get(url).then(function (response) {
-                            if (0 === response.data.code) {
-                                let url = 'exercises/result'
-                                let rankinglist = { 'score':correctNum*2 , 'unit' : vue.unit }
-                                axios.post(url,rankinglist).then(response => {
-                                    if(confirm("是否将错题加入错题本？")){
-                                        vue.addMistaken()
-                                    }
-                                })
-                            } else {
-                                $("#loginModal").modal('show')
+                        let url = 'exercises/result'
+                        let rankinglist = { 'score':correctNum*2 , 'unit' : vue.unit }
+                        axios.post(url,rankinglist).then(response => {
+                            if(confirm("是否将错题加入错题本？")){
+                                vue.addMistaken()
                             }
                         })
-
                     }
                 }
             })

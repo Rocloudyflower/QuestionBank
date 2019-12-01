@@ -8,7 +8,7 @@ import java.util.List;
 @Entity
 @Table(name = "question")
 @JsonIgnoreProperties({ "handler","hibernateLazyInitializer" })
-public class Question {
+public class Question implements Comparable<Question>{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -29,8 +29,12 @@ public class Question {
     private int searched;
     private int evatimes;
 
+
     @Transient
     private List<PropertyValue> propertyValues;
+
+    @Transient
+    private int containHotwords = 0;
 
     public int getId() {
         return id;
@@ -110,5 +114,22 @@ public class Question {
 
     public void setEvatimes(int evatimes) {
         this.evatimes = evatimes;
+    }
+
+    public int getContainHotwords() {
+        return containHotwords;
+    }
+
+    public void setContainHotwords(int containHotwords) {
+        this.containHotwords = containHotwords;
+    }
+
+    @Override
+    public int compareTo(Question o) {
+        // TODO Auto-generated method stub
+        if(this.containHotwords>=o.containHotwords)
+            return -1;//由高到底排序
+        else
+            return 1;
     }
 }

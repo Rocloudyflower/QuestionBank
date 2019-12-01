@@ -37,6 +37,10 @@ public class QuestionService {
         return questionDAO.findOne(id);
     }
 
+    public List<Question> getAll(){
+        return questionDAO.findAll();
+    }
+
     public void update(Question bean) {
         questionDAO.save(bean);
     }
