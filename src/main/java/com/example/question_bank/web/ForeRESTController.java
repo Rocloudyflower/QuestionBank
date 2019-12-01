@@ -111,7 +111,7 @@ public class ForeRESTController {
 
         for (Question question : questions){
             System.out.println(questions_.size() + " " + questions_.contains(question));
-            if (questions_.size() >= 10) break;
+            if (questions_.size() >= 10 || 0 == question.getContainHotwords()) break;
             if (!questions_.contains(question)){
 
                 questions_.add(question);

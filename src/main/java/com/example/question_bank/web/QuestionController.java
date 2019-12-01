@@ -11,10 +11,10 @@ import com.example.question_bank.service.SearchRecordService;
 import com.example.question_bank.util.ImageUtil;
 import com.example.question_bank.util.Page4Navigator;
 import com.example.question_bank.util.Result;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
