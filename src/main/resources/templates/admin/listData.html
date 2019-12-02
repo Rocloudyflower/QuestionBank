@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="include/admin_/adminHeader::html" ></head>
+<body>
+<div th:replace="include/admin_/adminNavigator::html" ></div>
+<script>
+    $(function(){
+        let data4Vue = {
+            uri:'categories',
+            beans: [],
+            bean: { id: 0, name: ''},
+            pagination:{},
+            categories:[],
+            name:[],
+            questionCount:[],
+            units:[],
+            unitname:[],
+            unitCount:[]
+        }
+
+        //ViewModel
+        let vue = new Vue({
+            el: '#workingArea',
+            data: data4Vue,
+            mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+                this.load()
+            },
+            methods: {
+                load:function () {
+                    let url =  "wordcloud"
+                    axios.get(url).then(response => {
+                        $('.wordcloud').attr("src","img/wordcloud.png")
+                        let result = response.data
+                        vue.categories = result.data.categories
+                        vue.questionCount = result.data.questionCount
+                        for( let n in vue.categories){
+                            vue.name.push(vue.categories[n].name)
+                        }
+                        vue.units = result.data.units
+                        vue.unitCount = result.data.unitCount
+                        for( let n in vue.units){
+                            vue.unitname.push(vue.units[n].name)
+                        }
+                        this.drawCategory()
+                    })
+                },
+                drawCategory:function () {
+                    let cxt = $("#categoryChart").get(0).getContext("2d")
+                    let categoryChart = new Chart(cxt,{
+                        type:'line',
+                        data:{
+                            labels: vue.name,
+                            datasets:[{
+                                label: '各题型题目量',
+                                data: vue.questionCount,
+                                borderColor:'blue',
+                                borderWidth: 1,
+                                fill: false
+                            }]
+                        },
+                        options: {
+                            tooltips: {
+                                intersect: false,
+                                mode: 'index'
+                            }
+                        }
+                    })
+                    let cxt_ = $("#unitChart").get(0).getContext("2d")
+                    let unitChart = new Chart(cxt_,{
+                        type:'line',
+                        data:{
+                            labels: vue.unitname,
+                            datasets:[{
+                                label: '各单元题目量',
+                                data: vue.unitCount,
+                                borderColor:'blue',
+                                borderWidth: 1,
+                                fill: false
+                            }]
+                        },
+                        options: {
+                            tooltips: {
+                                intersect: false,
+                                mode: 'index'
+                            }
+                        }
+                    })
+                }
+            }
+        })
+    })
+
+</script>
+
+<div id="workingArea" >
+    <div class="listDataDiv">
+        <h1 class="label label-info" >数据管理</h1>
+        <div class="chartDIV">
+            <canvas id="categoryChart"></canvas>
+        </div>
+        <div class="chartDIV">
+            <canvas id="unitChart"></canvas>
+        </div>
+        <div class="wordCloudImg">
+            <img src="" alt="词云" class="wordcloud">
+        </div>
+    </div>
+</div>
+<!--<div th:replace="include/admin/adminFooter::html" ></div>-->
+</body>
+</html>

@@ -10,6 +10,11 @@ public class AdminPageController {
         return "redirect:admin_category_list";
     }
 
+    @GetMapping(value="/admin_data_list")
+    public String listData(){
+        return "admin/listdata";
+    }
+
     @GetMapping(value="/admin_category_list")
     public String listCategory(){
         return "admin/listCategory";

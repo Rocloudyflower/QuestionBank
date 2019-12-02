@@ -51,6 +51,14 @@
     background-color: rgba(0,255,100,0.6);
     border-radius: 50%;
 }
+.topper .choices-list li:nth-child(4):before{
+    display: inline-block;
+    content: "";
+    width: 10px;
+    height: 10px;
+    background-color: rgba(0,160,255,0.6);
+    border-radius: 50%;
+}
 
 .listDataTableDiv{
     margin: auto;
@@ -127,4 +135,28 @@
 table img{
     width: 20px;
     height: 20px;
+}
+
+
+/* listData.html */
+.listDataDiv{
+    margin: 10px auto;
+    width: 80%;
+}
+
+.chartDIV{
+    margin:50px auto;
+    width:800px;
+    background-color:#fff;
+    border-radius:20px;
+}
+
+.wordCloudImg{
+    margin: 10px auto;
+    width: 100%;
+    text-align: center;
+}
+
+.wordCloudImg .wordcloud{
+    width: 40%;
 }

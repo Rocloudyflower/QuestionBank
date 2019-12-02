@@ -53,12 +53,6 @@ public class QuestionService {
         return new Page4Navigator<>(pageFromJPA,navigatePages);
     }
 
-//    public Page4Navigator<Question> search(String keyword, int start, int size, int navigatePages){
-//        Sort sort = new Sort(Sort.Direction.ASC,"id");
-//        Pageable pageable = new PageRequest(start,size,sort);
-//        Page<Question> pageFromJPA = questionDAO.findByDetailquestionLike(keyword,pageable);
-//        return new Page4Navigator<>(pageFromJPA,navigatePages);
-//    }
 
     //    刷题模式
     public List<Question> listexcersice(int uid) {
@@ -80,43 +74,6 @@ public class QuestionService {
         return exercices;
     }
 
-//    public List<Question> search(String keyword) {
-////        initDatabase2ES();
-//        FunctionScoreQueryBuilder functionScoreQueryBuilder = QueryBuilders.functionScoreQuery()
-//                .add(QueryBuilders.matchQuery("detailquestion", keyword),
-//                        ScoreFunctionBuilders.weightFactorFunction(1000))
-//                .add(QueryBuilders.matchQuery("explanation", keyword),
-//                        ScoreFunctionBuilders.weightFactorFunction(100));
-//
-//        Pageable pageable = new PageRequest(0, 10);
-//        SearchQuery searchQuery = new NativeSearchQueryBuilder()
-//                .withQuery(functionScoreQueryBuilder)
-//                .withPageable(pageable)
-//                .withSort(SortBuilders.scoreSort()).build();
-//
-////        SearchRequestBuilder searchRequestBuilder = new SearchRequestBuilder();
-////        searchRequestBuilder.setSearchType(SearchType.DFS_QUERY_THEN_FETCH);
-////        //分页
-////        searchRequestBuilder.setFrom(0).setSize(10);
-////        //explain为true表示根据数据相关度排序，和关键字匹配最高的排在前面
-////        searchRequestBuilder.setExplain(true);
-////        searchRequestBuilder.setQuery(functionScoreQueryBuilder);
-//        Page<Question> page = questionESDAO.search(searchQuery);
-//        return page.getContent();
-//    }
-
-//    private void initDatabase2ES() {
-//
-////        清空ES数据库
-//        questionESDAO.deleteAll();
-//
-//        Pageable pageable = new PageRequest(0, 5);
-//        Page<Question> page = questionESDAO.findAll(pageable);
-//        if(page.getContent().isEmpty()) {
-//            List<Question> questions= questionDAO.findAll();
-//            questionESDAO.save(questions);
-//        }
-//    }
 
     //用户评分
     public void questionsave(int id, double userScore){ // id为用户评分的题目的id，userScore为用户的评分
@@ -135,4 +92,11 @@ public class QuestionService {
         return questionDAO.findByDetailquestionContaining(keystring);
     }
 
+    public List<Question> listByCategory(Category category) {
+        return questionDAO.findByCategoryOrderById(category);
+    }
+
+    public List<Question> listByUnit(Unit unit) {
+        return questionDAO.findByUnitOrderById(unit);
+    }
 }
