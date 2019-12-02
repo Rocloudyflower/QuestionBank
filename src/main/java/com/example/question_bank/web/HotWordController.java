@@ -53,6 +53,7 @@ public class HotWordController {
         List<Integer> questionCount = new ArrayList<>();
         List<Unit> units = unitService.list();
         List<Integer> unitCount = new ArrayList<>();
+        List<Integer> unitSearch = new ArrayList<>();
 
         for(Category category : categories){
             List<Question> questions = questionService.listByCategory(category);
@@ -62,6 +63,11 @@ public class HotWordController {
         for(Unit unit : units){
             List<Question> questions = questionService.listByUnit(unit);
             unitCount.add(questions.size());
+            int count = 0;
+            for (Question q : questions){
+                count += q.getSearched();
+            }
+            unitSearch.add(count);
         }
 
         Map<String,Object> map= new HashMap<>();
@@ -69,6 +75,7 @@ public class HotWordController {
         map.put("questionCount", questionCount);
         map.put("units", units);
         map.put("unitCount", unitCount);
+        map.put("unitSearch", unitSearch);
 
         return Result.success(map);
     }

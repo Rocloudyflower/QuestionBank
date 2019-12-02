@@ -15,7 +15,8 @@
             questionCount:[],
             units:[],
             unitname:[],
-            unitCount:[]
+            unitCount:[],
+            unitSearch:[]
         }
 
         //ViewModel
@@ -41,6 +42,7 @@
                         for( let n in vue.units){
                             vue.unitname.push(vue.units[n].name)
                         }
+                        vue.unitSearch = result.data.unitSearch
                         this.drawCategory()
                     })
                 },
@@ -85,6 +87,20 @@
                             }
                         }
                     })
+                    let ctx__ = $('#unitSearchChart').get(0).getContext('2d')
+                    let unitSearchChart = new Chart(ctx__, {
+                        type: 'doughnut',
+                        data: {
+                            labels: vue.unitname,
+                            datasets: [{
+                                label: '各单元搜索量',
+                                data: vue.unitSearch,
+                                borderColor:'lightGray',
+                                backgroundColor:[ '#d2ebc6', '#e3f4d0', '#ecfbed', '#e6f5e8', '#dcf8ec','#d3f1ea','#e5f8f6','#d1f3f3','#bce6e6','#9cd8d8'],
+                                borderWidth: 1
+                            }]
+                        }
+                    })
                 }
             }
         })
@@ -100,6 +116,9 @@
         </div>
         <div class="chartDIV">
             <canvas id="unitChart"></canvas>
+        </div>
+        <div class="chartDIV">
+            <canvas id="unitSearchChart"></canvas>
         </div>
         <div class="wordCloudImg">
             <img src="" alt="词云" class="wordcloud">

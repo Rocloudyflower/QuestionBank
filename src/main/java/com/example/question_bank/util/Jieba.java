@@ -34,13 +34,11 @@ public class Jieba {
             buffer.append(s.trim());
         }
 
-        String xml = buffer.toString();
+        String xml = buffer.toString().toLowerCase();
+        System.out.println("xml+" + xml);
         bf.close();
         String [] str = xml.split("\\s");		//以空格分割
-//        System.out.println(str.length);		//输出数组的大小
-        HashSet<String> set = new HashSet<>(Arrays.asList(str));	//将数组转换为set集合，去重
-//        System.out.println(set.size());	//输出set中元素的个数
-        return set;
+        return new HashSet<>(Arrays.asList(str));
     }
 
 //    分词功能

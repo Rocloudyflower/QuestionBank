@@ -83,41 +83,42 @@ public class ForeRESTController {
         List<String> words = splitWords(keyword);
 
 //        遍历热词库，若该热词存在，数据库中searchtimes字段+1
-        for (String word : words){
-            if(hotWordService.exitByHotWord(word)){
-                HotWord hotWord = hotWordService.get(word);
-                int searchtimes = hotWord.getSearchtimes() + 1;
-                hotWord.setSearchtimes(searchtimes);
-                hotWordService.save(hotWord);
-            }else {
-                words.remove(word);
-            }
-        }
-
-//        遍历题库，计算每道题含有多少个关键词
-        List<Question> questions = questionService.getAll();
-        for (Question question : questions){
-            int count = 0;
+        if (!words.isEmpty()){
             for (String word : words){
-                if (question.getDetailquestion().contains(word)){
-                    count++;
+                if(hotWordService.exitByHotWord(word)){
+                    HotWord hotWord = hotWordService.get(word);
+                    int searchtimes = hotWord.getSearchtimes() + 1;
+                    hotWord.setSearchtimes(searchtimes);
+                    hotWordService.save(hotWord);
+                }else {
+                    words.remove(word);
                 }
             }
-            question.setContainHotwords(count);
-            System.out.println(question.getDetailquestion()+"\nquestion Cotains hotwords:" + count);
-        }
+            //        遍历题库，计算每道题含有多少个关键词
+            List<Question> questions = questionService.getAll();
+            for (Question question : questions){
+                int count = 0;
+                for (String word : words){
+                    if (question.getDetailquestion().contains(word)){
+                        count++;
+                    }
+                }
+                question.setContainHotwords(count);
+                System.out.println(question.getDetailquestion()+"\nquestion Cotains hotwords:" + count);
+            }
+            questions.sort(Question::compareTo);
 
-        questions.sort(Question::compareTo);
+            for (Question question : questions){
+                System.out.println(questions_.size() + " " + questions_.contains(question));
+                if (questions_.size() >= 10 || 0 == question.getContainHotwords()) break;
+                if (!questions_.contains(question)){
 
-        for (Question question : questions){
-            System.out.println(questions_.size() + " " + questions_.contains(question));
-            if (questions_.size() >= 10 || 0 == question.getContainHotwords()) break;
-            if (!questions_.contains(question)){
+                    questions_.add(question);
 
-                questions_.add(question);
-
+                }
             }
         }
+
         return questions_;
     }
 
