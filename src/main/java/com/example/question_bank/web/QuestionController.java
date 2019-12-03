@@ -47,9 +47,9 @@ public class QuestionController {
     HotWordService hotWordService;
 
     //设置APPID/AK/SK
-    public static final String APP_ID = "17712908";
-    public static final String API_KEY = "3TvcTfSPey2VkwaGt3bOeW72";
-    public static final String SECRET_KEY = "TjhPUD6ffZK5PIGxTZZVHuFjBVbeHtqo";
+    private static final String APP_ID = "17712908";
+    private static final String API_KEY = "3TvcTfSPey2VkwaGt3bOeW72";
+    private static final String SECRET_KEY = "TjhPUD6ffZK5PIGxTZZVHuFjBVbeHtqo";
 
     @PostMapping("/questions")
     public Object add(@RequestBody Question bean) throws Exception {

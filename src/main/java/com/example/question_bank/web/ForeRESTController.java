@@ -80,7 +80,8 @@ public class ForeRESTController {
         }
         List<Question> questions_ = questionService.searchQuestionDetail(keyword);
 
-        List<String> words = splitWords(keyword);
+        List<String> words = splitWords(keyword.toLowerCase());
+        System.out.println(words);
 
 //        遍历热词库，若该热词存在，数据库中searchtimes字段+1
         if (!words.isEmpty()){
@@ -94,27 +95,29 @@ public class ForeRESTController {
                     words.remove(word);
                 }
             }
+
             //        遍历题库，计算每道题含有多少个关键词
             List<Question> questions = questionService.getAll();
             for (Question question : questions){
                 int count = 0;
                 for (String word : words){
-                    if (question.getDetailquestion().contains(word)){
+                    if (question.getDetailquestion().toLowerCase().contains(word)){
                         count++;
                     }
                 }
                 question.setContainHotwords(count);
-                System.out.println(question.getDetailquestion()+"\nquestion Cotains hotwords:" + count);
+//                System.out.println(question.getDetailquestion()+"\nquestion Cotains hotwords:" + count);
             }
             questions.sort(Question::compareTo);
+            for (Question question : questions){
+                System.out.println(question.getContainHotwords());
+            }
 
             for (Question question : questions){
                 System.out.println(questions_.size() + " " + questions_.contains(question));
                 if (questions_.size() >= 10 || 0 == question.getContainHotwords()) break;
                 if (!questions_.contains(question)){
-
                     questions_.add(question);
-
                 }
             }
         }
