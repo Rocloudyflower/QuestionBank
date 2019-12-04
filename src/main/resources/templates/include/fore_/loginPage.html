@@ -18,13 +18,13 @@
                     login:function () {
                         let url = this.uri
                         if( 0 === this.user.email.length){
-                            $("span.errorMessage").html("请输入登录邮箱")
-                            $("div.loginErrorMessageDiv").css("display","block")
+                            $(".errorMessage").css("display","inline").html("请输入登录邮箱")
+                            $(".loginErrorMessageDiv").css("display","block")
                             return
                         }
                         if(0 === this.user.password.length){
-                            $("span.errorMessage").html("请输入密码")
-                            $("div.loginErrorMessageDiv").css("display","block")
+                            $(".errorMessage").css("display","inline").html("请输入密码")
+                            $(".loginErrorMessageDiv").css("display","block")
                             return
                         }
 
@@ -34,8 +34,8 @@
                                 location.href="home"
                             }
                             else{
-                                $("span.errorMessage").html(result.message)
-                                $("div.loginErrorMessageDiv").css("display","block")
+                                $(".errorMessage").css("display","inline").html(result.message)
+                                $(".loginErrorMessageDiv").css("display","block")
                             }
                         })
                     }

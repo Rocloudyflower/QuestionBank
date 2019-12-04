@@ -12,29 +12,29 @@
                 el: "#workingArea",
                 data:data4Vue,
                 mounted:function () {
-                    linkDefaultActions()
+
                 },
                 methods:{
                     register:function () {
                         let url = this.uri
                         if(0 === this.user.name.length){
-                            $("span.errorMessage").html("请输入登录名")
-                            $("div.registerErrorMessageDiv").css("display","block")
+                            $(".errorMessage").css("display","inline").html("请输入登录名")
+                            $(".registerErrorMessageDiv").css("display","block")
                             return
                         }
                         if(0 === this.user.password.length){
-                            $("span.errorMessage").html("请输入密码")
-                            $("div.registerErrorMessageDiv").css("display","block")
+                            $(".errorMessage").css("display","inline").html("请输入密码")
+                            $(".registerErrorMessageDiv").css("display","block")
                             return
                         }
                         if(0 === this.user.repeatpassword.length){
-                            $("span.errorMessage").html("请输入重复密码");
-                            $("div.registerErrorMessageDiv").css("display","block")
+                            $(".errorMessage").css("display","inline").html("请输入重复密码");
+                            $(".registerErrorMessageDiv").css("display","block")
                             return
                         }
                         if(this.user.password !== this.user.repeatpassword){
-                            $("span.errorMessage").html("重复密码不一致")
-                            $("div.registerErrorMessageDiv").css("display","block")
+                            $(".errorMessage").css("display","inline").html("重复密码不一致")
+                            $(".registerErrorMessageDiv").css("display","block")
                             return
                         }
 
@@ -46,8 +46,8 @@
                                 location.href="login"
                             }
                             else{
-                                $("span.errorMessage").html(result.message)
-                                $("div.registerErrorMessageDiv").css("display","block")
+                                $(".errorMessage").css("display","inline").html(result.message)
+                                $(".registerErrorMessageDiv").css("display","block")
                             }
                         })
                     }

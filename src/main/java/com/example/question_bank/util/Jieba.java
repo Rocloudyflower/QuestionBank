@@ -3,13 +3,9 @@ package com.example.question_bank.util;
 import org.springframework.util.ResourceUtils;
 
 import javax.xml.ws.handler.Handler;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 public class Jieba {
 
@@ -18,15 +14,20 @@ public class Jieba {
     static {
         try {
             set = getWords();
-        } catch (IOException e) {
-            e.printStackTrace();
+        }catch (IOException ignored){
+
         }
     }
 
     //    获得自定义分词
     private static HashSet<String> getWords() throws IOException{
+
+        InputStream stream = Jieba.class
+                .getClassLoader()
+                .getResourceAsStream("static/dicts/hotwords.txt");
+        BufferedReader bf = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
+
         StringBuilder buffer = new StringBuilder();
-        BufferedReader bf = new BufferedReader(new FileReader(ResourceUtils.getFile("classpath:dicts/hotwords.txt")));
 
         String s = null;
         while((s = bf.readLine()) != null){

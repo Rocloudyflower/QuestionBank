@@ -30,7 +30,7 @@
                 load:function () {
                     let url =  "wordcloud"
                     axios.get(url).then(response => {
-                        $('.wordcloud').attr("src","img/wordcloud.png")
+
                         let result = response.data
                         vue.categories = result.data.categories
                         vue.questionCount = result.data.questionCount
@@ -101,6 +101,7 @@
                             }]
                         }
                     })
+                    $('.wordcloud').attr("src","img/wordcloud.png")
                 }
             }
         })
@@ -121,7 +122,7 @@
             <canvas id="unitSearchChart"></canvas>
         </div>
         <div class="wordCloudImg">
-            <img src="" alt="词云" class="wordcloud">
+            <a title="点击查看大图" href="/img/wordcloud.png" target="_blank"><img src="img/wordcloud.png" alt="词云" class="wordcloud"></a>
         </div>
     </div>
 </div>

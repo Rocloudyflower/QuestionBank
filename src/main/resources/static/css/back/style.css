@@ -9,14 +9,14 @@
 .topper .top-welcome{
     margin-left: 10%;
     display: inline-block;
-    width: 10%;
+    width: 20%;
     height: 40px;
     line-height: 40px;
     float:left;
 }
 
 .topper .choices-list{
-    margin-left: 60%;
+    margin-left: 50%;
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-around;

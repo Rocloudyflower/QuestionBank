@@ -22,11 +22,11 @@ public class RankingListService {
 
     public void add(RankingList bean) {rankingListDAO.save(bean);}
 
-    public void delete(int id) {rankingListDAO.delete(id);}
+    public void delete(int id) {rankingListDAO.deleteById(id);}
 
     public void update(RankingList bean) {rankingListDAO.save(bean);}
 
-    public RankingList get(int id) {return rankingListDAO.findOne(id);}
+    public RankingList get(int id) {return rankingListDAO.getOne(id);}
 
     //获取每个章节的排行榜
     //unitid 为目标章节id

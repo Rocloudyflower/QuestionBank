@@ -147,7 +147,7 @@ public class QuestionController {
         client = new AipOcr(APP_ID, API_KEY, SECRET_KEY );
         String word = "";
         // 调用接口
-        String path = "D:\\QuestionBank\\src\\main\\webapp\\img\\image.jpg";
+        String path = request.getServletContext().getRealPath("/img/image.jpg");
         JSONObject res = client.basicAccurateGeneral(path, new HashMap<String, String>());
         JSONArray result = res.getJSONArray("words_result");
         for(int i = 0 ; i < result.length() ; i++){

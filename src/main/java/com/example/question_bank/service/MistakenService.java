@@ -21,13 +21,13 @@ public class MistakenService {
         mistakenDAO.save(mistaken);
     }
     public Mistaken get(int id){
-        return mistakenDAO.findOne(id);
+        return mistakenDAO.getOne(id);
     }
     public void delete(int id){
-        mistakenDAO.delete(id);
+        mistakenDAO.deleteById(id);
     }
     public List<Mistaken> listByUser(User user){
-        return mistakenDAO.findByUser(user);
+        return mistakenDAO.findByUserOrderByIdDesc(user);
     }
     public Mistaken findbyQuestionAndUser(Question question, User user){
         return mistakenDAO.findByQuestionAndUser(question,user);

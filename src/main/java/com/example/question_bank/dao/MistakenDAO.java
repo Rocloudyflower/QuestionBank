@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface MistakenDAO extends JpaRepository<Mistaken,Integer> {
     Mistaken findByQuestionAndUser(Question question, User user);
-    List<Mistaken> findByUser(User user);
+    List<Mistaken> findByUserOrderByIdDesc(User user);
 }

@@ -30,11 +30,11 @@ public class QuestionService {
     }
 
     public void delete(int id) {
-        questionDAO.delete(id);
+        questionDAO.deleteById(id);
     }
 
     public Question get(int id) {
-        return questionDAO.findOne(id);
+        return questionDAO.getOne(id);
     }
 
     public List<Question> getAll(){

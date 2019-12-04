@@ -28,13 +28,13 @@
                                 $(".loginSubmitButton").click(function(){
                                     let url =  "forelogin"
                                     if(0 === vue.user.email.length){
-                                        $("span.errorMessage").html("请输入登录邮箱")
-                                        $("div.loginErrorMessageDiv").css("display","block")
+                                        $(".errorMessage").css("display","inline").html("请输入登录邮箱")
+                                        $(".loginErrorMessageDiv").css("display","block")
                                         return
                                     }
                                     if(0 === vue.user.password.length){
-                                        $("span.errorMessage").html("请输入密码")
-                                        $("div.loginErrorMessageDiv").css("display","block")
+                                        $(".errorMessage").css("display","inline").html("请输入密码")
+                                        $(".loginErrorMessageDiv").css("display","block")
                                         return
                                     }
                                     axios.post(url,vue.user).then(function(response) {
@@ -43,8 +43,8 @@
                                             location.href="exercise"
                                         }
                                         else{
-                                            $("span.errorMessage").html(result.message)
-                                            $("div.loginErrorMessageDiv").css("visibility","visible")
+                                            $(".errorMessage").css("display","inline").html(result.message)
+                                            $(".loginErrorMessageDiv").css("visibility","visible")
                                         }
                                     })
                                 })
@@ -78,7 +78,6 @@
                         $("div[id^='answerItems']").empty()
                         $("div[id^='answersDiv']").empty()
                         let unitID = $("#unitID" + unit.id)
-                        if(!unitID.hasClass("disabled")){
                             let uid = unit.id
                             let url = this.uri + "/" + uid + "/" + "questionsinfo"
                             axios.get(url).then(function (response) {
@@ -88,10 +87,6 @@
                                 }
                             })
 
-                        }
-
-                        $("div[id^='unitID']").removeClass("disabled")
-                        unitID.addClass("disabled")
 
                         $('#answerBtn').css('display','block')
                     },
@@ -125,8 +120,6 @@
                     addMistaken: function () {
                         // 加入错题本
                         let url_ = "mistakens/list"
-                        // let stringW = JSON.stringify(vue.wrongQuestion)
-                        // console.log(stringW)
                         axios.post(url_,vue.wrongQuestion).then(function (response) {
                             console.log(response.data)
                         })

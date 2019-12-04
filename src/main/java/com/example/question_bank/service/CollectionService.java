@@ -21,10 +21,10 @@ public class CollectionService {
         collectionDAO.save(collection);
     }
     public Collection get(int id){
-        return collectionDAO.findOne(id);
+        return collectionDAO.getOne(id);
     }
     public void delete(int id){
-        collectionDAO.delete(id);
+        collectionDAO.deleteById(id);
     }
     public void update(Collection collection){
         collectionDAO.save(collection);

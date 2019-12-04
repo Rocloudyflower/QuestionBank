@@ -12,9 +12,12 @@ import com.example.question_bank.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,8 +49,8 @@ public class HotWordController {
         return hotWordList;
     }
 
-    @GetMapping("wordcloud")
-    public Object wordCloud() throws FileNotFoundException {
+    @GetMapping("/wordcloud")
+    public Object wordCloud(){
         hotWordService.createWordCloud();
         List<Category> categories = categoryService.list();
         List<Integer> questionCount = new ArrayList<>();

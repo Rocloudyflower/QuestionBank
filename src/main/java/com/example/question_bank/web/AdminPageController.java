@@ -12,7 +12,7 @@ public class AdminPageController {
 
     @GetMapping(value="/admin_data_list")
     public String listData(){
-        return "admin/listdata";
+        return "admin/listData";
     }
 
     @GetMapping(value="/admin_category_list")

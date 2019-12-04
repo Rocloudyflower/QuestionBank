@@ -9,14 +9,15 @@ import com.kennycason.kumo.bg.CircleBackground;
 import com.kennycason.kumo.font.KumoFont;
 import com.kennycason.kumo.font.scale.SqrtFontScalar;
 import com.kennycason.kumo.nlp.FrequencyAnalyzer;
+import com.kennycason.kumo.nlp.tokenizers.ChineseWordTokenizer;
 import com.kennycason.kumo.palette.LinearGradientColorPalette;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.awt.*;
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class HotWordService {
     }
 
     public boolean exitByHotWord(String hotword){
-        return hotWordDAO.exists(hotword);
+        return hotWordDAO.existsById(hotword);
     }
 
     public void save(HotWord hotWord){
@@ -41,12 +42,12 @@ public class HotWordService {
         return hotWordDAO.getOne(hotWord);
     }
 
-    public void createWordCloud() throws FileNotFoundException {
+    public void createWordCloud(){
         List<HotWord> hotWordList = hotWordDAO.findAllByOrderBySearchtimesDesc();//按搜索次数大小排序返回结果
         List<String> wordlist = new ArrayList<>();
         int top = 60; //前60个热词
         int i =0;
-        while (i<top){
+        while (i < top){
             HotWord t_hotword = hotWordList.get(i);
             String t_word = t_hotword.getHotword();
             int count = t_hotword.getSearchtimes();//热词搜索次数
@@ -59,8 +60,7 @@ public class HotWordService {
         FrequencyAnalyzer frequencyAnalyzer = new FrequencyAnalyzer();
         frequencyAnalyzer.setWordFrequenciesToReturn(600);
         frequencyAnalyzer.setMinWordLength(2);
-
-        //frequencyAnalyzer.setWordTokenizer(new ChineseWordTokenizer());
+        frequencyAnalyzer.setWordTokenizer(new ChineseWordTokenizer());
 
         List<WordFrequency> wordFrequencyList = frequencyAnalyzer.load(wordlist);
         Dimension dimension = new Dimension(600, 600);
@@ -76,6 +76,14 @@ public class HotWordService {
         wordCloud.setFontScalar(new SqrtFontScalar(12,45));
         wordCloud.build(wordFrequencyList);
 
-        wordCloud.writeToFile("D:\\QuestionBank\\src\\main\\webapp\\img\\wordcloud.png"); //生成词云的图片路径（可改
+//        String folder = "img/";
+//        File imgFolder = new File(request.getServletContext().getRealPath(folder));
+//        File file = new File(imgFolder,"wordcloud.png");
+//        if(!file.getParentFile().exists())
+//            file.getParentFile().mkdirs();
+//        System.out.println(file.getPath());
+
+        wordCloud.writeToFile("D:\\QuestionBank\\src\\main\\webapp\\img\\wordcloud.png");
+
     }
 }

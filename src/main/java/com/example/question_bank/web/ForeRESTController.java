@@ -1,11 +1,8 @@
 package com.example.question_bank.web;
 
-import com.alibaba.fastjson.JSON;
 import com.example.question_bank.pojo.*;
 import com.example.question_bank.service.*;
-import com.example.question_bank.util.Jieba;
 import com.example.question_bank.util.Result;
-import org.apache.shiro.crypto.hash.Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
@@ -14,9 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+
 
 import static com.example.question_bank.util.Jieba.splitWords;
 
@@ -73,11 +69,12 @@ public class ForeRESTController {
         return Result.fail("未登录");
     }
 
-    @PostMapping("foresearch")
-    public List<Question> search(@RequestParam(name = "keyword") String keyword) throws IOException {
+    @GetMapping("foresearch")
+    public List<Question> search(@RequestParam(name = "keyword") String keyword, HttpServletRequest request) throws IOException {
         if(null == keyword){
             return new ArrayList<>();
         }
+
         List<Question> questions_ = questionService.searchQuestionDetail(keyword);
 
         List<String> words = splitWords(keyword.toLowerCase());

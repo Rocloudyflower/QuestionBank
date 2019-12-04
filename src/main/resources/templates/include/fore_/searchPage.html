@@ -34,7 +34,7 @@
 
                         keyword = $(" input[ name='keyword' ] ").val()
                         let url =  this.uri+"?keyword=" + keyword
-                        axios.post(url).then(function(response) {
+                        axios.get(url).then(function(response) {
                             vue.questions = response.data
                             if(0 === vue.questions.length){
                                 window.open("https://www.baidu.com/s?wd=" + keyword)
@@ -58,7 +58,7 @@
                             let keyword_ = response.data
                             $('.searchInput').val(keyword_)
                             let url_ =  "foresearch?keyword=" + keyword_
-                            axios.post(url_).then(function(response) {
+                            axios.get(url_).then(function(response) {
                                 vue.questions = response.data
                                 if(0 === vue.questions.length){
                                     window.open("https://www.baidu.com/s?wd=" + keyword_)
@@ -148,7 +148,7 @@
                     expandSearch:function () {
                         keyword = $(" input[ name='keyword' ] ").val()
                         let url =  this.uri+"?keyword=" + keyword
-                        axios.post(url).then(function(response) {
+                        axios.get(url).then(function(response) {
                             vue.results = response.data
                             console.log(vue.results)
                             let selectDIV = $('#selectExpand')
@@ -174,7 +174,7 @@
     </div>
 
     <div class="searchArea">
-        <img th:src="@{/img/logo.png}" alt="" src="../../../static/img/logo.png">
+        <img th:src="@{/img/logo.png}" alt="" src="img/logo.png">
 
         <input class="searchInput" name="keyword" type="text" list="expand" v-on:input="expandSearch()">
         <datalist id="expand">

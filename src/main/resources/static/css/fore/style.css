@@ -37,6 +37,10 @@
     line-height:40px;
 }
 
+.topper .choices-list a{
+    color:#000;
+}
+
 .topper .choices-list li:nth-child(1):before{
     display: inline-block;
     content: "";
@@ -68,7 +72,6 @@
 /* login.html */
 .errorMessage{
     display: none;
-
 }
 
 #login-form input{
@@ -77,7 +80,7 @@
 }
 
 /* register.html */
-.registerErrorMessageDiv{
+.loginErrorMessageDiv, .registerErrorMessageDiv{
     display: none;
 }
 
@@ -515,6 +518,11 @@ input[name="rate"]:hover~input[name='rate']::after {
 
 .historyDiv .questionBlock{
     margin:20px auto;
+}
+
+.historyQuestions{
+    display:flex;
+    flex-direction:column-reverse;
 }
 
 /* rankinglist.html */

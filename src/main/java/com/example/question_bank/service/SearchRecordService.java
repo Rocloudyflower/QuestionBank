@@ -21,10 +21,10 @@ public class SearchRecordService {
         searchRecordDAO.save(searchRecord);
     }
     public SearchRecord get(int id){
-        return searchRecordDAO.findOne(id);
+        return searchRecordDAO.getOne(id);
     }
     public void delete(int id){
-        searchRecordDAO.delete(id);
+        searchRecordDAO.deleteById(id);
     }
     public void update(SearchRecord searchRecord){
         searchRecordDAO.save(searchRecord);
