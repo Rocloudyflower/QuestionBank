@@ -2,12 +2,14 @@ package com.example.question_bank.pojo;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "collection")
 @JsonIgnoreProperties({ "handler","hibernateLazyInitializer" })
+@Proxy(lazy = false)
 public class Collection {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

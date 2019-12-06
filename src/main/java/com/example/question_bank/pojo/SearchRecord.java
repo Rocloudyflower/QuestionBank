@@ -1,6 +1,7 @@
 package com.example.question_bank.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -8,6 +9,7 @@ import java.util.Date;
 @Entity
 @Table(name = "searchrecord")
 @JsonIgnoreProperties({ "handler","hibernateLazyInitializer" })
+@Proxy(lazy = false)
 public class SearchRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
