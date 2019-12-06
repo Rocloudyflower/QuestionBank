@@ -25,9 +25,19 @@
             el: '#workingArea',
             data: data4Vue,
             mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
-                this.load()
+                this.checklogin()
             },
             methods: {
+                checklogin:function(){
+                    let url = "admincheckLogin"
+                    axios.get(url).then(function(response) {
+                        if(0 === response.data.code){
+                            vue.load()
+                        }else{
+                            location.href="adminlogin"
+                        }
+                    })
+                },
                 load:function () {
                     let url =  "wordcloud"
                     axios.get(url).then(response => {
