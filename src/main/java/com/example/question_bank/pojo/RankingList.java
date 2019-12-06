@@ -16,7 +16,7 @@ public class RankingList {
     int id;
 
     @ManyToOne
-    @JoinColumn(name = "useremail")
+    @JoinColumn(name = "uid")
     private User user;
 
     @ManyToOne
