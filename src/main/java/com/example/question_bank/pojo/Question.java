@@ -126,10 +126,6 @@ public class Question implements Comparable<Question>{
 
     @Override
     public int compareTo(Question o) {
-        // TODO Auto-generated method stub
-        if(this.containHotwords>=o.containHotwords)
-            return -1;//由高到底排序
-        else
-            return 1;
+        return Integer.compare(o.containHotwords, this.containHotwords);//由高到底排序
     }
 }

@@ -11,16 +11,16 @@ import javax.persistence.Table;
 @JsonIgnoreProperties({ "handler","hibernateLazyInitializer" })
 public class HotWord {
     @Id
-    private String hotword;
+    private String Id;
 
     private int searchtimes;
 
     public String getHotword() {
-        return hotword;
+        return Id;
     }
 
-    public void setHotword(String hotword) {
-        this.hotword = hotword;
+    public void setHotword(String Id) {
+        this.Id = Id;
     }
 
     public int getSearchtimes() {

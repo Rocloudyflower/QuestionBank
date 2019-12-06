@@ -51,17 +51,18 @@ public class HotWordController {
 
     @GetMapping("/wordcloud")
     public Object wordCloud(){
-        hotWordService.createWordCloud();
-        List<Category> categories = categoryService.list();
-        List<Integer> questionCount = new ArrayList<>();
+//        hotWordService.createWordCloud();
+//        List<Category> categories = categoryService.list();
+//        List<Integer> questionCount = new ArrayList<>();
         List<Unit> units = unitService.list();
         List<Integer> unitCount = new ArrayList<>();
         List<Integer> unitSearch = new ArrayList<>();
+        List<HotWord> hotWords = new ArrayList<>();
 
-        for(Category category : categories){
-            List<Question> questions = questionService.listByCategory(category);
-            questionCount.add(questions.size());
-        }
+//        for(Category category : categories){
+//            List<Question> questions = questionService.listByCategory(category);
+//            questionCount.add(questions.size());
+//        }
 
         for(Unit unit : units){
             List<Question> questions = questionService.listByUnit(unit);
@@ -73,12 +74,23 @@ public class HotWordController {
             unitSearch.add(count);
         }
 
+        int i =0;
+        List<HotWord> hotWordList = hotWordService.sortBySearchtimes();
+        for(HotWord hotWord : hotWordList){
+            if(i<50){
+                hotWords.add(hotWord);
+                i++;
+            }else break;
+        }
+
+
         Map<String,Object> map= new HashMap<>();
-        map.put("categories", categories);
-        map.put("questionCount", questionCount);
+//        map.put("categories", categories);
+//        map.put("questionCount", questionCount);
         map.put("units", units);
         map.put("unitCount", unitCount);
         map.put("unitSearch", unitSearch);
+        map.put("hotwords", hotWords);
 
         return Result.success(map);
     }
