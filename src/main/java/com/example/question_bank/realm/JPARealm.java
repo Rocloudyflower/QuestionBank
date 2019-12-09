@@ -1,4 +1,4 @@
-package realm;
+package com.example.question_bank.realm;
 
 import com.example.question_bank.pojo.User;
 import com.example.question_bank.service.UserService;

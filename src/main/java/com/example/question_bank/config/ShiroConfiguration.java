@@ -8,7 +8,7 @@ import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import realm.JPARealm;
+import com.example.question_bank.realm.JPARealm;
 
 @Configuration
 public class ShiroConfiguration {

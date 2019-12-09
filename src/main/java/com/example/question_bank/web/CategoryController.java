@@ -17,8 +17,7 @@ public class CategoryController {
     @GetMapping("/categories")
     public Page4Navigator<Category> list(@RequestParam(value = "start", defaultValue = "0") int start, @RequestParam(value = "size", defaultValue = "10") int size) throws Exception {
         start = start < 0 ? 0 : start;
-        Page4Navigator<Category> page = categoryService.list(start, size, 6);  //10表示导航分页最多有10个，像 [1,2,3,4,5,6,...] 这样
-        return page;
+        return categoryService.list(start, size, 6);
     }
 
     @PostMapping("/categories")

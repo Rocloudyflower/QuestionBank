@@ -67,7 +67,6 @@ public class ForeRESTController {
         String salt = new SecureRandomNumberGenerator().nextBytes().toString();
         int times = 2;
         String algorithmName = "md5";
-
         String encodedPassword = new SimpleHash(algorithmName,password,salt,times).toString();
 
         String name = user.getName();

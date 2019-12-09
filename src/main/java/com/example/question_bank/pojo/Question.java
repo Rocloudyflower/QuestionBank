@@ -5,6 +5,7 @@ import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "question")
@@ -129,5 +130,17 @@ public class Question implements Comparable<Question>{
     @Override
     public int compareTo(Question o) {
         return Integer.compare(o.containHotwords, this.containHotwords);//由高到底排序
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (o instanceof Question) {
+            Question inItem = (Question) o;
+            return id == inItem.getId();
+        }
+        return false;
     }
 }
