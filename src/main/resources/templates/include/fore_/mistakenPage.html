@@ -26,9 +26,10 @@
                     jumpByNumber: function(start){
                         jumpByNumber(start,vue)
                     },
-                    showQuestionItem:function (question) {
+                    showQuestionItem:function (question,index) {
                         let qid = question.id
-                        if($("#mistakenItemsTR" + qid).hasClass('firsttime')){
+                        let mistakenItems = $("#mistakenItemsTR" + index)
+                        if(mistakenItems.hasClass('firsttime')){
                             let url = "questions/"+ qid +"/propertyValues"
                             let beans = {}
                             axios.get(url).then(function(response) {
@@ -36,12 +37,11 @@
                                 console.log(beans)
                                 for (let i = 0; i < beans.length ; i++){
                                     var p = "<p>" + beans[i].property.name + " | " + beans[i].value + "</p>"
-                                    $("#mistakenItemsTRchoice" + qid).append(p)
+                                    $("#mistakenItemsTRchoice" + index).append(p)
                                 }
                             })
                         }
-                        $("#mistakenItemsTR" + qid).removeClass('firsttime')
-                        $("#mistakenItemsTR" + qid).toggle()
+                        mistakenItems.removeClass('firsttime').toggle()
                     },
                     deleteQuestionItem:function (question) {
                         let url = this.uri + "/" + question.id

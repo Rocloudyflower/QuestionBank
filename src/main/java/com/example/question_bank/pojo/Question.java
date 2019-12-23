@@ -1,16 +1,17 @@
 package com.example.question_bank.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.springframework.data.elasticsearch.annotations.Document;
+import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "question")
 @JsonIgnoreProperties({ "handler","hibernateLazyInitializer" })
-@Document(indexName = "questionbank",type = "question")
-public class Question {
+@Proxy(lazy = false)
+public class Question implements Comparable<Question>{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -29,10 +30,14 @@ public class Question {
     private String explanation;
     private double score;
     private int searched;
+    private int evatimes;
 
 
     @Transient
     private List<PropertyValue> propertyValues;
+
+    @Transient
+    private int containHotwords = 0;
 
     public int getId() {
         return id;
@@ -104,5 +109,38 @@ public class Question {
 
     public void setSearched(int searched) {
         this.searched = searched;
+    }
+
+    public int getEvatimes() {
+        return evatimes;
+    }
+
+    public void setEvatimes(int evatimes) {
+        this.evatimes = evatimes;
+    }
+
+    public int getContainHotwords() {
+        return containHotwords;
+    }
+
+    public void setContainHotwords(int containHotwords) {
+        this.containHotwords = containHotwords;
+    }
+
+    @Override
+    public int compareTo(Question o) {
+        return Integer.compare(o.containHotwords, this.containHotwords);//由高到底排序
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (o instanceof Question) {
+            Question inItem = (Question) o;
+            return id == inItem.getId();
+        }
+        return false;
     }
 }

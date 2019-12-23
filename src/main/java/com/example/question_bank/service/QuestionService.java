@@ -1,23 +1,15 @@
 package com.example.question_bank.service;
 
-import com.example.question_bank.dao.CategoryDAO;
 import com.example.question_bank.dao.QuestionDAO;
-import com.example.question_bank.es.QuestionESDAO;
 import com.example.question_bank.pojo.*;
 import com.example.question_bank.util.Page4Navigator;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
-import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,19 +24,21 @@ public class QuestionService {
     PropertyService propertyService;
     @Autowired
     PropertyValueService propertyValueService;
-    @Autowired
-    QuestionESDAO questionESDAO;
 
     public void add(Question bean) {
         questionDAO.save(bean);
     }
 
     public void delete(int id) {
-        questionDAO.delete(id);
+        questionDAO.deleteById(id);
     }
 
     public Question get(int id) {
-        return questionDAO.findOne(id);
+        return questionDAO.getOne(id);
+    }
+
+    public List<Question> getAll(){
+        return questionDAO.findAll();
     }
 
     public void update(Question bean) {
@@ -59,12 +53,6 @@ public class QuestionService {
         return new Page4Navigator<>(pageFromJPA,navigatePages);
     }
 
-//    public Page4Navigator<Question> search(String keyword, int start, int size, int navigatePages){
-//        Sort sort = new Sort(Sort.Direction.ASC,"id");
-//        Pageable pageable = new PageRequest(start,size,sort);
-//        Page<Question> pageFromJPA = questionDAO.findByDetailquestionLike("%"+keyword+"%",pageable);
-//        return new Page4Navigator<>(pageFromJPA,navigatePages);
-//    }
 
     //    刷题模式
     public List<Question> listexcersice(int uid) {
@@ -86,40 +74,29 @@ public class QuestionService {
         return exercices;
     }
 
-    public List<Question> search(String keyword, int start, int size) {
-//        initDatabase2ES();
-        FunctionScoreQueryBuilder functionScoreQueryBuilder = QueryBuilders.functionScoreQuery()
-                .add(QueryBuilders.matchQuery("detailquestion", keyword),
-                        ScoreFunctionBuilders.weightFactorFunction(1000))
-                .add(QueryBuilders.matchQuery("explanation", keyword),
-                        ScoreFunctionBuilders.weightFactorFunction(50))
-                .scoreMode("sum")
-                .setMinScore(100);
 
-        Pageable pageable = new PageRequest(start, 10);
-        SearchQuery searchQuery = new NativeSearchQueryBuilder()
-                .withPageable(pageable)
-                .withQuery(functionScoreQueryBuilder).build();
-        Page<Question> page = questionESDAO.search(searchQuery);
-        return page.getContent();
+    //用户评分
+    public void questionsave(int id, double userScore){ // id为用户评分的题目的id，userScore为用户的评分
+        Question currentQuestion = get(id);
+        int totalTimes = currentQuestion.getEvatimes();
+        double currentScore = currentQuestion.getScore();
+        double avgScore = ( currentScore * totalTimes + userScore )/( totalTimes + 1 );
+        currentQuestion.setEvatimes( totalTimes + 1 );
+        currentQuestion.setScore(avgScore);
+        update(currentQuestion);
     }
 
-    private void initDatabase2ES() {
-
-//        清空ES数据库
-        questionESDAO.deleteAll();
-
-
-//
-//        Pageable pageable = new PageRequest(0, 5);
-//        Page<Question> page = questionESDAO.findAll(pageable);
-//        if(page.getContent().isEmpty()) {
-        List<Question> questions= questionDAO.findAll();
-        for (Question question : questions) {
-            questionESDAO.save(question);
-        }
-//        }
+    //    关键词相关 -- 按xx排序，返回前10个
+    public List<Question> searchQuestionDetail(String keystring)
+    {
+        return questionDAO.findByDetailquestionContaining(keystring);
     }
 
+    public List<Question> listByCategory(Category category) {
+        return questionDAO.findByCategoryOrderById(category);
+    }
 
+    public List<Question> listByUnit(Unit unit) {
+        return questionDAO.findByUnitOrderById(unit);
+    }
 }

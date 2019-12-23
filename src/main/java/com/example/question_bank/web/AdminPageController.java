@@ -10,6 +10,11 @@ public class AdminPageController {
         return "redirect:admin_category_list";
     }
 
+    @GetMapping(value="/admin_data_list")
+    public String listData(){
+        return "admin/listData";
+    }
+
     @GetMapping(value="/admin_category_list")
     public String listCategory(){
         return "admin/listCategory";
@@ -58,5 +63,10 @@ public class AdminPageController {
     @GetMapping(value="/admin_propertyValue_edit")
     public String editPropertyValue(){
         return "admin/editPropertyValue";
+    }
+
+    @GetMapping(value = "/adminlogin")
+    public String login(){
+        return "admin/adminLogin";
     }
 }

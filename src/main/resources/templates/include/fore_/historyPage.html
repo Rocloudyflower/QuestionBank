@@ -1,0 +1,68 @@
+<div th:fragment="html" xmlns:th="http://www.w3.org/1999/xhtml">
+    <script>
+        $(function () {
+            let data4Vue ={
+                uri:'histories',
+                questions:[]
+            }
+
+            let vue = new Vue({
+                el:'#workingArea',
+                data:data4Vue,
+                mounted:function(){
+                    this.list()
+                },
+                methods:{
+                    list: function(){
+                        let url = this.uri
+                        axios.get(url).then(function (response) {
+                            vue.questions = response.data
+                            // alert(vue.questions)
+                        })
+                    },
+                    jump: function(page){
+                        jump(page,vue) //定义在header.html 中
+                    },
+                    jumpByNumber: function(start){
+                        jumpByNumber(start,vue)
+                    },
+                    showQuestionItem:function (question,index) {
+                        let qid = question.id
+                        let historyItem = $("#historyItemsTR" + index)
+                        if(historyItem.hasClass('firsttime')){
+                            let url = "questions/"+ qid +"/propertyValues"
+                            let beans = {}
+                            axios.get(url).then(function(response) {
+                                beans = response.data
+                                console.log(beans)
+                                for (let i = 0; i < beans.length ; i++){
+                                    var p = "<p>" + beans[i].property.name + " | " + beans[i].value + "</p>"
+                                    $("#historyItemsTRchoice" + index).append(p)
+                                }
+                            })
+                        }
+                        historyItem.removeClass('firsttime').toggle()
+                    },
+                    deleteQuestionItem:function (question) {
+                        let url = this.uri + "/" + question.id
+                        axios.delete(url).then(function (response) {
+                            if(0 !== response.data.length){
+                                alert(response.data)
+                            }else {
+                                vue.list()
+                            }
+                        })
+                    }
+                }
+            })
+        })
+    </script>
+
+    <div id="history">
+        <div class="historyDiv">
+            <div th:replace="include/fore_/questionsByHistory::html"></div>
+        </div>
+    </div>
+
+
+</div>

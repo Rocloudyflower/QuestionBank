@@ -42,6 +42,31 @@ public class MistakenController {
         return Result.success();
     }
 
+    @PostMapping("mistakens/list")
+    public Object addList(@RequestBody Integer[] wrongQuestion,HttpSession session){
+        User user = (User) session.getAttribute("user");
+        List<Mistaken> mistakens = mistakenService.listByUser(user);
+
+
+        for (Integer integer : wrongQuestion){
+            boolean found = false;
+                for(Mistaken mistaken : mistakens){
+                if (mistaken.getQuestion().getId() == questionService.get(integer).getId()) {
+                    found = true;
+                    break;
+                }
+            }
+            if(!found){
+                Mistaken m = new Mistaken();
+                Question question = questionService.get(integer);
+                m.setQuestion(question);
+                m.setUser(user);
+                mistakenService.add(m);
+            }
+        }
+        return Result.success();
+    }
+
     @GetMapping("mistakens")
     public Object collection(HttpSession session){
         User user =(User) session.getAttribute("user");

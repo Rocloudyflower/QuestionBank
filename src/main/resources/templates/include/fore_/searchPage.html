@@ -1,4 +1,4 @@
-<div th:fragment="html" xmlns:th="http://www.w3.org/1999/xhtml">
+<div th:fragment="html" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
 
     <script>
         $(function () {
@@ -7,9 +7,10 @@
                 uri:"foresearch",
                 questions:[],
                 file:null,
-                pagination:{},
-                user:{email: '',password: ''},
-                searchFile: ''
+                user: {email: '',password: ''},
+                searchFile: '',
+                results:[],
+                hotwords:[]
             }
 
             // VueModel
@@ -17,32 +18,31 @@
                 el:"#workingArea",
                 data:data4Vue,
                 mounted:function(){
-
+                    this.gethotwords()
                 },
                 methods:{
+                    gethotwords:function(){
+                        let url = "hotwords"
+                        axios.get(url).then(response => {
+                            vue.hotwords = response.data
+                        })
+                    },
                     textSearch:function(){
+
+                        $("div[id^='questionItemsTR']").addClass('firsttime').hide()
+                        $("div[id^='questionItemsChoices']").empty().show()
+
                         keyword = $(" input[ name='keyword' ] ").val()
                         let url =  this.uri+"?keyword=" + keyword
-                        axios.post(url).then(function(response) {
-                            // vue.pagination = response.data
+                        axios.get(url).then(function(response) {
                             vue.questions = response.data
                             if(0 === vue.questions.length){
-                                let search_string = keyword
-                                window.open("https://www.baidu.com/s?wd=" + search_string)
+                                window.open("https://www.baidu.com/s?wd=" + keyword)
                             }
                             else{
                                 console.log(vue.questions)
-                                for(let i = 0; i < vue.questions.length ; i++ ){
-                                    console.log(vue.questions[i].id)
-                                    var temp_id = vue.questions[i].id
-                                    $("#questionItemsTR" + temp_id).addClass('firsttime')
-                                    $("#questionItemsTRchoice" + temp_id).empty()
-                                    $("#questionItemsTR" + temp_id).hide()
-                                }
                             }
                         })
-
-
                     },
                     photoSearch:function(event){
                         //    上传图片文件
@@ -56,23 +56,19 @@
 
                         axios.post(url,formData).then(function(response){
                             let keyword_ = response.data
+                            $('.searchInput').val(keyword_)
                             let url_ =  "foresearch?keyword=" + keyword_
-                            axios.post(url_).then(function(response) {
-                                // vue.pagination = response.data
+                            axios.get(url_).then(function(response) {
                                 vue.questions = response.data
                                 if(0 === vue.questions.length){
-                                    let search_string = keyword_
-                                    window.open("https://www.baidu.com/s?wd=" + search_string)
+                                    window.open("https://www.baidu.com/s?wd=" + keyword_)
                                 }
                                 else{
                                     console.log(vue.questions)
-                                    for(let i = 0; i < vue.questions.length ; i++ ){
-                                        console.log(vue.questions[i].id)
-                                        var temp_id = vue.questions[i].id
-                                        $("#questionItemsTR" + temp_id).addClass('firsttime')
-                                        $("#questionItemsTRchoice" + temp_id).empty()
-                                        $("#questionItemsTR" + temp_id).hide()
-                                    }
+
+                                    $("div[id^='questionItemsChoices']").empty()
+                                    $("div[id^='questionItemsTR']").addClass('firsttime').hide()
+
                                 }
                             })
                         })
@@ -83,9 +79,10 @@
                     jumpByNumber: function(start){
                         jumpByNumber(start,vue)
                     },
-                    showQuestionItem:function (question) {
+                    showQuestionItem:function (question,index) {
                         let qid = question.id
-                        if($("#questionItemsTR" + qid).hasClass('firsttime')){
+                        let showQuestionItem = $("#questionItemsTR" + index)
+                        if(showQuestionItem.hasClass('firsttime')){
                             let url = "questions/"+ qid +"/propertyValues"
                             let beans = {}
                             axios.get(url).then(function(response) {
@@ -93,16 +90,17 @@
                                 console.log(beans)
                                 for (let i = 0; i < beans.length ; i++){
                                     let p = "<p>" + beans[i].property.name + " | " + beans[i].value + "</p>"
-                                    $("#questionItemsTRchoice" + qid).append(p)
+                                    $("#questionItemsChoices" + index).append(p)
+                                    console.log(index)
                                 }
                                 // 查看详情，搜索量+1
                                 let url_ = "questions/searched/"+ qid
                                 axios.post(url_).then(function(response){
-                                    console.log(response)
+                                    console.log(response.data)
                                 })
                             })
                         }
-                        $("#questionItemsTR" + qid).removeClass('firsttime').toggle()
+                        showQuestionItem.removeClass('firsttime').toggle()
                     },
                     addCollection:function (question) {
                         let url = "forecheckLogin"
@@ -124,6 +122,42 @@
                                 $("#loginModal").modal('show')
                             }
                         })
+                    },
+                    evaluateQuestion:function (question,index) {
+                        $('#evaluateDIV'+index).toggle()
+                        submitEvaluation(question,index)
+                    },
+                    submitEvaluation:function (question,index) {
+                        let score = $("input[name='rate']:checked").val()
+                        console.log("score:" + score)
+                        let url = "questions/evaluate/" + question.id
+                        let formdata = new FormData()
+                        formdata.set("score",score)
+                        axios.post(url,formdata).then(response => {
+                            console.log(response.data)
+                            let finalScore = response.data.data
+                            $("#submitEvaluation"+index).css("display","none")
+                            $("#rateDIV"+index).css("display","none")
+                            let p = `<p>提交成功！评分：${score} 分</p>`
+                            $("#resultscore"+index).append(p)
+                        //    把综合评分改掉！
+                            vue.questions[index].score = finalScore
+
+                        })
+                    },
+                    expandSearch:function () {
+                        keyword = $(" input[ name='keyword' ] ").val()
+                        let url =  this.uri+"?keyword=" + keyword
+                        axios.get(url).then(function(response) {
+                            vue.results = response.data
+                            console.log(vue.results)
+                            let selectDIV = $('#selectExpand')
+                            selectDIV.empty()
+                            for(let r in vue.results){
+                                let option = "<option value='" + vue.results[r].detailquestion + "'>" + vue.results[r].detailquestion + "</option>"
+                                selectDIV.append(option)
+                            }
+                        })
                     }
                 }
             })
@@ -132,10 +166,24 @@
 
     <div th:replace="include/fore_/modal4login::html"></div>
 
+    <!--        显示热词-->
+    <div class="hotwordDIV">
+        <div class="cube">
+            <div class="small" v-for="h in hotwords">{{h.hotword}}</div>
+        </div>
+    </div>
+
     <div class="searchArea">
-        <img th:src="@{/img/logo.png}" alt="" src="../../../static/img/logo.png">
-            <input type="text" class="searchInput" name="keyword">
-            <ul class="btn-list">
+        <img th:src="@{/img/logo.png}" alt="" src="img/logo.png">
+
+        <input class="searchInput" name="keyword" type="text" list="expand" v-on:input="expandSearch()">
+        <datalist id="expand">
+            <select id="selectExpand">
+
+            </select>
+        </datalist>
+
+        <ul class="btn-list">
                 <li>
                     <button class="search-btn" @click="textSearch">搜索🔍</button>
                 </li>
@@ -149,8 +197,6 @@
             </ul>
 
 
-<!--        放入上传的图片-->
-<!--        <div></div>-->
         <div id="searchResult">
             <div class="searchResultDiv">
                 <div th:replace="include/fore_/questionsBySearch::html"></div>

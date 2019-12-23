@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="include/admin_/adminHeader::html" ></head>
+<body>
+<div th:replace="include/admin_/adminNavigator::html" ></div>
+<script>
+    $(function(){
+        let data4Vue = {
+            uri:'categories',
+            beans: [],
+            bean: { id: 0, name: ''},
+            pagination:{},
+            // categories:[],
+            // name:[],
+            // questionCount:[],
+            units:[],
+            unitname:[],
+            unitCount:[],
+            unitSearch:[],
+            hotwords:[]
+        }
+
+        //ViewModel
+        let vue = new Vue({
+            el: '#workingArea',
+            data: data4Vue,
+            mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+                this.checklogin()
+            },
+            methods: {
+                checklogin:function(){
+                    let url = "admincheckLogin"
+                    axios.get(url).then(function(response) {
+                        if(0 === response.data.code){
+                            vue.load()
+                        }else{
+                            location.href="adminlogin"
+                        }
+                    })
+                },
+                load:function () {
+                    let url =  "wordcloud"
+                    axios.get(url).then(response => {
+
+                        let result = response.data
+                        // vue.categories = result.data.categories
+                        // vue.questionCount = result.data.questionCount
+                        // for( let n in vue.categories){
+                        //     vue.name.push(vue.categories[n].name)
+                        // }
+                        vue.units = result.data.units
+                        vue.unitCount = result.data.unitCount
+                        for( let n in vue.units){
+                            vue.unitname.push(vue.units[n].name)
+                        }
+                        vue.unitSearch = result.data.unitSearch
+                        vue.hotwords = result.data.hotwords
+                        this.drawCategory()
+                    })
+                },
+                drawCategory:function () {
+                    // let cxt = $("#categoryChart").get(0).getContext("2d")
+                    // let categoryChart = new Chart(cxt,{
+                    //     type:'line',
+                    //     data:{
+                    //         labels: vue.name,
+                    //         datasets:[{
+                    //             label: '各题型题目量',
+                    //             data: vue.questionCount,
+                    //             borderColor:'blue',
+                    //             borderWidth: 1,
+                    //             fill: false
+                    //         }]
+                    //     },
+                    //     options: {
+                    //         tooltips: {
+                    //             intersect: false,
+                    //             mode: 'index'
+                    //         }
+                    //     }
+                    // })
+                    let cxt_ = $("#unitChart").get(0).getContext("2d")
+                    let unitChart = new Chart(cxt_,{
+                        type:'line',
+                        data:{
+                            labels: vue.unitname,
+                            datasets:[{
+                                label: '各单元题目量',
+                                data: vue.unitCount,
+                                borderColor:'blue',
+                                borderWidth: 1,
+                                fill: false
+                            }]
+                        },
+                        options: {
+                            tooltips: {
+                                intersect: false,
+                                mode: 'index'
+                            }
+                        }
+                    })
+                    let ctx__ = $('#unitSearchChart').get(0).getContext('2d')
+                    let unitSearchChart = new Chart(ctx__, {
+                        type: 'doughnut',
+                        data: {
+                            labels: vue.unitname,
+                            datasets: [{
+                                label: '各单元搜索量',
+                                data: vue.unitSearch,
+                                borderColor:'lightGray',
+                                backgroundColor:[ '#d2ebc6', '#e3f4d0', '#ecfbed', '#e6f5e8', '#dcf8ec','#d3f1ea','#e5f8f6','#d1f3f3','#bce6e6','#9cd8d8'],
+                                borderWidth: 1
+                            }]
+                        }
+                    })
+                    let wordcloud = echarts.init(document.getElementById('wordcloud'))
+                    let word_dict_ary = []
+                    for(let i=0;i<vue.hotwords.length;i++)
+                        {
+                            let dist = {
+                                'name':vue.hotwords[i].hotword,//应该是这样获取的？或者是word_ary[i]['hotword']总之就是热词的值，字符串类型
+                                'value':vue.hotwords[i].searchtimes//这个是搜索的次数，整型
+                            };
+                            word_dict_ary.push(dist)
+                        }
+                    wordcloud.setOption({
+                        series:[{
+                            type:'wordCloud',
+                            gridSize:1, //布吉岛干嘛用的
+                            sizeRange:[22,75], //应该是显示字体大小的范围
+                            rotationRange:[-60,60],//字体旋转角度范围
+                            shape:'circle',//词云形状 圆形，还有'triangle'之类的
+                            left:'center',
+                            top:'center',
+                            right:null,
+                            bottom:null,
+                            textStyle:{
+                                normal:{
+                                    color:function(){//字体颜色
+                                        return 'rgb(' + [
+                                            Math.round(Math.random()*160),
+                                            Math.round(Math.random()*160),
+                                            Math.round(Math.random()*160)
+                                        ].join(',')+')';
+                                    }
+                                }
+                            },
+                            data:word_dict_ary //生成词云的数据数组
+                        }]
+                    })
+                }
+            }
+        })
+    })
+
+</script>
+
+<div id="workingArea" >
+    <div class="listDataDiv">
+        <h1 class="label label-info" >数据管理</h1>
+<!--        <div class="chartDIV">-->
+<!--            <canvas id="categoryChart"></canvas>-->
+<!--        </div>-->
+        <div class="chartDIV">
+            <canvas id="unitChart"></canvas>
+        </div>
+        <div class="chartDIV">
+            <canvas id="unitSearchChart"></canvas>
+        </div>
+        <div class="wordCloud">
+            <h3>热词 词云☁</h3>
+            <div id="wordcloud" style="margin:0 auto;width:800px;height:600px"></div>
+        </div>
+    </div>
+</div>
+<!--<div th:replace="include/admin/adminFooter::html" ></div>-->
+</body>
+</html>

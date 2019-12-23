@@ -1,0 +1,82 @@
+<div th:fragment="html" xmlns:th="http://www.w3.org/1999/xhtml" id="rankingList">
+
+    <script>
+        $(function () {
+            let data4Vue ={
+                uri: "rankinglist",
+                units:[],
+                rankinglist:[]
+            }
+
+            let vue = new Vue({
+                el: "#workingArea",
+                data: data4Vue,
+                mounted:function () {
+                    this.list()
+                },
+                methods:{
+                    list:function () {
+                        let url = 'units' // 这个是分页返回的..需要重新写方法
+                        axios.get(url).then(function (response) {
+                            vue.units = response.data.content
+                            vue.chooseUnit(vue.units[0])
+                        })
+                    },
+                    chooseUnit:function (unit) {
+                        vue.unit = unit
+
+                        let cur_unit = $("#unitID" + unit.id)
+
+                        if(!cur_unit.hasClass("disabled")){
+                            let uid = unit.id
+                            let url = this.uri + "/" + uid
+                            axios.get(url).then(function (response) {
+                                vue.rankinglist = response.data
+                            })
+
+                        }
+
+                        $("div[id^='unitID']").removeClass("disabled")
+                        cur_unit.addClass("disabled")
+
+                    }
+                }
+            })
+        })
+
+    </script>
+
+    <div class="rankinglist-nav">
+        <h3>排行榜</h3>
+        <ul class="ranking-list">
+            <li v-for="u in units" @click="chooseUnit(u)" :id="'unitID'+u.id">{{u.name}}</li>
+        </ul>
+    </div>
+
+    <div>
+        <div class="list">
+
+            <div class="container" style="width: 100%">
+
+                <table class="table table-bordered table-striped" style="width:100%;font-display:block">
+                    <thead>
+                    <tr>
+                        <th>名次</th>
+                        <th>用户名</th>
+                        <th>答题次数</th>
+                        <th>最高分</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(r,index) in rankinglist">
+                        <td>{{index+1}}</td>
+                        <td>{{r.user.name}}</td>
+                        <td>{{r.times}}</td>
+                        <td>{{r.score}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
